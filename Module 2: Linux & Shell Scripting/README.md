@@ -127,7 +127,8 @@ A Virtual Machine (VM) is a software-based emulation of a computer system that r
 | **touch** | Creates an empty file or updates its timestamp. | `touch newfile.txt` |
 | **head** | Shows the first 10 lines of a file. Use `-n` for a specific number. | `head -5 file.txt` |
 | **tail** | Displays the last 10 lines of a file. Use `-f` to follow updates. | `tail -f /var/log/syslog` |
-| **less/more** | Scroll through file content. `less` allows forward and backward navigation. | `less file.txt` |
+| **less** | Scroll through file content. `less` allows forward and backward navigation. | `less file.txt` |
+| **more** | View file content one page at a time but only allows forward navigation. | `more file.txt` |
 | **wc** | Counts lines, words, and characters in a file. | `wc -l file.txt` |
 
 ---
