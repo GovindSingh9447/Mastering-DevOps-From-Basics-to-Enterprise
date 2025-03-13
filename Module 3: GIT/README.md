@@ -340,4 +340,4 @@ git commit -m "Resolved merge conflict"
 
 ---
 
-This categorized table covers everything from basic Git usage to advanced workflows like rebasing, cherry-picking, and submodules. Let me know if you need any refinements! 🚀
+This categorized table covers everything from basic Git usage to advanced workflows like rebasing, cherry-picking, and submodules. 🚀
