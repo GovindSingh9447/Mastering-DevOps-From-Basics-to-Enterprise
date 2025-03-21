@@ -1115,5 +1115,206 @@ done
 
 ---
 
+### **🔴 Integration with DevOps Tools** 🚀  
+
+Now, let's explore how **Shell Scripting** integrates with **Ansible, Terraform, CI/CD pipelines, and monitoring tools** like **Prometheus, Grafana, and ELK Stack**. These are crucial for **automation and DevOps workflows**.  
+
+---
+
+## **1️⃣ Using Shell Scripting with Ansible (`shell:` module)**  
+
+### **📌 Running Shell Commands in Ansible Playbooks**  
+```yaml
+- name: Execute a shell command
+  hosts: all
+  tasks:
+    - name: Run a shell command
+      shell: echo "Hello from Ansible!"
+```
+
+### **📌 Running a Script Using Ansible**  
+```yaml
+- name: Run a shell script
+  hosts: all
+  tasks:
+    - name: Execute script
+      shell: /path/to/script.sh
+```
+
+### **📌 Using Shell Output in Ansible**  
+```yaml
+- name: Capture shell output
+  hosts: all
+  tasks:
+    - name: Get uptime
+      shell: uptime
+      register: uptime_output
+
+    - debug:
+        msg: "Server uptime: {{ uptime_output.stdout }}"
+```
+
+---
+
+## **2️⃣ Shell Scripting with Terraform (`local-exec`)**  
+
+Terraform allows executing shell scripts using the **`local-exec`** provisioner.  
+
+### **📌 Running a Local Shell Command in Terraform**  
+```hcl
+resource "null_resource" "example" {
+  provisioner "local-exec" {
+    command = "echo 'Terraform is executing a shell command'"
+  }
+}
+```
+
+### **📌 Running a Script After Creating an AWS Instance**  
+```hcl
+resource "aws_instance" "example" {
+  ami           = "ami-12345678"
+  instance_type = "t2.micro"
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo apt update -y",
+      "sudo apt install -y nginx",
+      "echo '<h1>Deployed via Terraform</h1>' | sudo tee /var/www/html/index.html"
+    ]
+  }
+}
+```
+
+---
+
+## **3️⃣ CI/CD Pipelines (`Jenkins`, `GitHub Actions`, `GitLab CI`)**  
+
+### **📌 Using Shell Scripts in Jenkins Pipelines**  
+```groovy
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                sh 'echo "Building the application..."'
+                sh './build.sh'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh 'echo "Deploying the application..."'
+                sh './deploy.sh'
+            }
+        }
+    }
+}
+```
+
+### **📌 Running Shell Commands in GitHub Actions**  
+```yaml
+name: Run Shell Script in CI
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Execute Shell Script
+        run: |
+          echo "Running shell script in GitHub Actions"
+          ./myscript.sh
+```
+
+### **📌 Shell Scripts in GitLab CI/CD**  
+```yaml
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  script:
+    - echo "Building project..."
+    - ./build.sh
+
+deploy:
+  stage: deploy
+  script:
+    - echo "Deploying application..."
+    - ./deploy.sh
+```
+
+---
+
+## **4️⃣ Monitoring & Logging (`Prometheus`, `Grafana`, `ELK Stack`)**  
+
+### **📌 Using Shell Scripts with Prometheus**  
+Prometheus can scrape shell script outputs if exposed via an HTTP endpoint.
+
+```sh
+#!/bin/bash
+echo "# HELP my_custom_metric A custom metric"
+echo "# TYPE my_custom_metric gauge"
+echo "my_custom_metric $(date +%s)"
+```
+
+Run a simple **HTTP server** using Python to expose this script:  
+```sh
+python3 -m http.server 8000 &
+```
+Now, Prometheus can scrape metrics from `http://localhost:8000/metrics`.
+
+---
+
+### **📌 Using Shell Scripts with Grafana**  
+Grafana can visualize **system logs, server status, or script outputs** by sending them to **Prometheus, Loki, or InfluxDB**.
+
+#### **Collect System Metrics in a Shell Script**  
+```sh
+#!/bin/bash
+while true; do
+    echo "$(date) - CPU: $(top -bn1 | grep "Cpu(s)" | awk '{print $2 + $4}')%"
+    sleep 5
+done
+```
+Send this output to **Loki** and **Grafana** for real-time monitoring.
+
+---
+
+### **📌 Using Shell Scripts with ELK Stack (Elasticsearch, Logstash, Kibana)**  
+
+#### **Send Log Data to Logstash Using Shell**  
+```sh
+echo '{"@timestamp": "'$(date --iso-8601=seconds)'", "message": "Server is running"}' | nc localhost 5044
+```
+This sends logs to **Logstash**, which can be forwarded to **Elasticsearch and visualized in Kibana**.
+
+---
+
+### **🔥 Summary Table**  
+
+| **Integration**              | **Shell Command / Script Example** |
+|-----------------------------|-----------------------------------|
+| **Ansible (`shell:` module)** | `shell: echo "Hello from Ansible!"` |
+| **Terraform (`local-exec`)** | `provisioner "local-exec" { command = "echo 'Hello'" }` |
+| **Jenkins Pipeline** | `sh './build.sh'` |
+| **GitHub Actions** | `run: ./myscript.sh` |
+| **GitLab CI/CD** | `script: ./deploy.sh` |
+| **Monitoring with Prometheus** | `echo "custom_metric $(date +%s)"` |
+| **Logging to ELK Stack** | `echo '{"message": "Log data"}' | nc localhost 5044` |
+
+---
+
+### **🔥 Final Thoughts**
+With these scripts, you can:  
+✅ Automate deployments using **Ansible & Terraform**  
+✅ Integrate shell scripts into **CI/CD pipelines (Jenkins, GitHub Actions, GitLab CI/CD)**  
+✅ Monitor & log system data using **Prometheus, Grafana, and ELK Stack**  
+
+
 
 🔥 **You're doing great!** 🚀 Let me know if you have any questions before moving to the next section! 😊
