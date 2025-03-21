@@ -658,7 +658,152 @@ echo "✅ Processing complete!"
 Student: John | Achieved: A	Excellent
 Student: Bob | Achieved: A	Excellent
 ```
+---
+
+### **🟣 Advanced Shell Scripting** 🚀  
+
+Now, let’s dive into some **advanced shell scripting concepts** that will take your DevOps skills to the next level! 🔥  
 
 ---
+
+## **1️⃣ Working with Arrays (`arr=("one" "two" "three")`)**  
+
+### **📌 Defining and Accessing Arrays**
+```sh
+#!/bin/bash
+
+# Declare an array
+arr=("Apple" "Banana" "Cherry")
+
+# Access elements
+echo "First element: ${arr[0]}"
+echo "Second element: ${arr[1]}"
+
+# Print all elements
+echo "All elements: ${arr[@]}"
+```
+
+### **📌 Looping Through an Array**
+```sh
+for fruit in "${arr[@]}"; do
+    echo "Fruit: $fruit"
+done
+```
+
+---
+
+## **2️⃣ Associative Arrays (`declare -A my_array`)**  
+
+Unlike indexed arrays, **associative arrays** use **key-value pairs**.
+
+### **📌 Defining an Associative Array**
+```sh
+#!/bin/bash
+
+# Declare an associative array
+declare -A student
+
+# Assign key-value pairs
+student[name]="John"
+student[age]=21
+student[course]="DevOps"
+
+# Access elements
+echo "Student Name: ${student[name]}"
+echo "Student Age: ${student[age]}"
+echo "Student Course: ${student[course]}"
+```
+
+---
+
+## **3️⃣ Regular Expressions (`grep`, `sed`, `awk`)**  
+
+### **📌 Using `grep` for Pattern Matching**
+```sh
+grep "error" logfile.txt  # Find lines containing 'error'
+grep -i "warning" logfile.txt  # Case-insensitive search
+```
+
+### **📌 Using `sed` for Text Manipulation**
+```sh
+sed 's/old/new/g' file.txt  # Replace 'old' with 'new'
+sed -n '/pattern/p' file.txt  # Print only matching lines
+```
+
+### **📌 Using `awk` for Text Processing**
+```sh
+awk '{print $1, $3}' file.txt  # Print the 1st and 3rd columns
+awk '/error/ {print $0}' logfile.txt  # Print lines containing 'error'
+```
+
+---
+
+## **4️⃣ Pipelines & Redirection (`|`, `>`, `>>`, `2>`, `&>`)**  
+
+| Symbol  | Description |
+|---------|-------------|
+| `|` | Pipe output of one command to another |
+| `>` | Redirect output to a file (overwrite) |
+| `>>` | Append output to a file |
+| `2>` | Redirect stderr (errors) to a file |
+| `&>` | Redirect both stdout and stderr |
+
+### **📌 Example**
+```sh
+ls -l | grep ".sh" > scripts.txt  # Save all `.sh` files to scripts.txt
+cat scripts.txt >> all_scripts.txt  # Append to another file
+rm nonexistentfile 2> error.log  # Redirect error messages
+```
+
+---
+
+## **5️⃣ Here Documents & Here Strings (`<<EOF ... EOF`, `<<<`)**  
+
+### **📌 Here Document (`<<EOF ... EOF`)**  
+Used to send **multi-line input** to a command.  
+```sh
+cat <<EOF > myfile.txt
+Hello Singh,
+Welcome to Advanced Shell Scripting!
+EOF
+```
+
+### **📌 Here String (`<<<`)**  
+Used for **single-line input**.  
+```sh
+grep "hello" <<< "hello world"
+```
+
+---
+
+## **6️⃣ Subshells (`(command)`) vs. Parent Shell (`command`)**  
+
+### **📌 Subshell `(command)`**
+A **subshell** runs in a new shell environment without affecting the parent shell.  
+```sh
+#!/bin/bash
+VAR="Hello"
+
+# Subshell
+( VAR="Goodbye"; echo "Inside Subshell: $VAR" )
+
+# Parent shell remains unchanged
+echo "Outside Subshell: $VAR"
+```
+
+### **📌 Parent Shell (`command`)**
+A normal command **modifies the existing shell environment**.  
+```sh
+VAR="Hello"
+VAR="Goodbye"  # Modified in the same shell
+echo "$VAR"  # Outputs "Goodbye"
+```
+
+---
+
+### **🔥 That’s a Wrap for Advanced Shell Scripting!** 
+
+
+
 
 🔥 **You're doing great!** 🚀 Let me know if you have any questions before moving to the next section! 😊
