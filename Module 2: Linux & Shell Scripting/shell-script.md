@@ -916,7 +916,204 @@ echo "Debugging disabled now"
 
 ---
 
+### **⚫ Automation & DevOps-Specific Topics** 🚀  
 
-Let me know if you want more examples before we move forward! 😎
+Now, let's dive into automation, system administration, and DevOps-specific scripting tasks that are **essential for a DevOps Engineer!**  
+
+---
+
+## **1️⃣ Scheduling Jobs (`cron`, `crontab -e`, `at`)**  
+
+### **📌 Scheduling a Job Using `cron` (Recurring Jobs)**  
+Edit the crontab file:  
+```sh
+crontab -e
+```
+Add this line to run a script every day at midnight:  
+```sh
+0 0 * * * /path/to/myscript.sh
+```
+**Format:**  
+```
+Minute Hour Day Month DayOfWeek Command
+```
+
+### **📌 One-Time Job with `at`**  
+Run a command in the future:  
+```sh
+echo "echo 'Hello, World!'" | at now + 1 minute
+```
+
+---
+
+## **2️⃣ Interacting with APIs (`curl`, `wget`, `jq`)**  
+
+### **📌 Make a GET request with `curl`**  
+```sh
+curl -s https://jsonplaceholder.typicode.com/posts/1 | jq '.'
+```
+
+### **📌 Make a POST request with `curl`**  
+```sh
+curl -X POST -H "Content-Type: application/json" -d '{"name": "Singh"}' https://jsonplaceholder.typicode.com/posts
+```
+
+### **📌 Download a file with `wget`**  
+```sh
+wget https://example.com/file.zip
+```
+
+---
+
+## **3️⃣ SSH & Remote Execution (`ssh user@server 'command'`)**  
+
+### **📌 Running a Remote Command via SSH**  
+```sh
+ssh user@192.168.1.100 'ls -l /var/log'
+```
+
+### **📌 Running a Script on a Remote Server**  
+```sh
+ssh user@remote-server 'bash -s' < local_script.sh
+```
+
+---
+
+## **4️⃣ File Transfers (`scp`, `rsync`)**  
+
+### **📌 Copy a File Using `scp`**  
+```sh
+scp localfile.txt user@remote:/path/to/destination/
+```
+
+### **📌 Sync Files Using `rsync`**  
+```sh
+rsync -avz /local/path user@remote:/remote/path
+```
+
+---
+
+## **5️⃣ Environment Variables (`export VAR=value`)**  
+
+### **📌 Set and Export a Variable**  
+```sh
+export MY_VAR="Hello DevOps!"
+echo $MY_VAR
+```
+
+---
+
+## **6️⃣ Working with Logs (`tail -f /var/log/syslog`)**  
+
+### **📌 View Logs in Real Time**  
+```sh
+tail -f /var/log/syslog
+```
+
+### **📌 Filter Logs Using `grep`**  
+```sh
+tail -f /var/log/syslog | grep "ERROR"
+```
+
+---
+
+## **7️⃣ Handling JSON/XML in Shell (`jq`, `xmlstarlet`)**  
+
+### **📌 Parse JSON with `jq`**  
+```sh
+echo '{"name": "Singh", "role": "DevOps"}' | jq '.name'
+```
+
+### **📌 Parse XML with `xmlstarlet`**  
+```sh
+xmlstarlet sel -t -m "//book/title" -v . -n books.xml
+```
+
+---
+
+## **8️⃣ Working with YAML (`yq`)**  
+
+### **📌 Read a YAML Value with `yq`**  
+```sh
+yq eval '.services.web.image' docker-compose.yml
+```
+
+### **📌 Convert JSON to YAML**  
+```sh
+echo '{"name": "Singh"}' | yq -P
+```
+
+---
+
+## **9️⃣ Writing Systemd Service Scripts (`.service` files)**  
+
+### **📌 Create a Systemd Service**  
+Save this in `/etc/systemd/system/myservice.service`:  
+```ini
+[Unit]
+Description=My Custom Service
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/bash /path/to/script.sh
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target
+```
+
+### **📌 Enable & Start the Service**  
+```sh
+systemctl enable myservice  
+systemctl start myservice  
+systemctl status myservice  
+```
+
+---
+
+## **🔟 Scripting Kubernetes (`kubectl` in Shell Scripts)**  
+
+### **📌 List Pods in a Namespace**  
+```sh
+kubectl get pods -n dev
+```
+
+### **📌 Restart a Pod**  
+```sh
+kubectl delete pod my-pod -n dev
+```
+
+### **📌 Automate Kubernetes Tasks with a Script**  
+```sh
+#!/bin/bash
+for pod in $(kubectl get pods -n dev -o jsonpath='{.items[*].metadata.name}'); do
+  echo "Restarting pod: $pod"
+  kubectl delete pod $pod -n dev
+done
+```
+
+---
+
+### **🔥 Summary Table**  
+
+| **Concept**                 | **Command Example** |
+|-----------------------------|---------------------|
+| Schedule a cron job | `crontab -e` |
+| Run command in future | `echo "echo hi" | at now + 5 min` |
+| API request | `curl -X GET url` |
+| SSH remote execution | `ssh user@server 'ls'` |
+| File copy | `scp file user@server:/path/` |
+| Sync files | `rsync -avz /local user@server:/remote` |
+| Export variable | `export VAR=value` |
+| Tail logs | `tail -f /var/log/syslog` |
+| Parse JSON | `jq '.' file.json` |
+| Parse XML | `xmlstarlet sel -t -m "//tag" -v . -n file.xml` |
+| Read YAML | `yq eval '.key' file.yml` |
+| Create systemd service | `systemctl enable/start myservice` |
+| Kubernetes scripting | `kubectl get pods -n dev` |
+
+---
+
 
 🔥 **You're doing great!** 🚀 Let me know if you have any questions before moving to the next section! 😊
