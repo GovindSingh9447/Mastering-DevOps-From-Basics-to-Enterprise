@@ -801,9 +801,122 @@ echo "$VAR"  # Outputs "Goodbye"
 
 ---
 
-### **🔥 That’s a Wrap for Advanced Shell Scripting!** 
+### **🟤 Process Management & Debugging** 🚀  
+
+Now, let's cover **process management and debugging techniques** in shell scripting, essential for a DevOps Engineer!  
+
+---
+
+## **1️⃣ Background & Foreground Jobs (`&`, `fg`, `bg`)**  
+
+### **📌 Running a Process in the Background (`&`)**  
+```sh
+#!/bin/bash
+sleep 10 &  # Runs in the background
+echo "Process running in the background!"
+```
+
+### **📌 Bringing a Background Job to the Foreground (`fg`)**  
+```sh
+fg %1  # Bring job 1 to the foreground
+```
+
+### **📌 Sending a Process to the Background (`bg`)**  
+```sh
+CTRL + Z  # Pause the foreground job
+bg  # Resume it in the background
+```
+
+---
+
+## **2️⃣ Process ID (`$$`, `$!`, `ps`, `kill`, `pkill`)**  
+
+### **📌 Get the Current Script's PID (`$$`)**  
+```sh
+echo "Script PID: $$"
+```
+
+### **📌 Get the Last Background Process PID (`$!`)**  
+```sh
+sleep 60 &  
+echo "Background process PID: $!"
+```
+
+### **📌 List Running Processes (`ps`)**  
+```sh
+ps aux | grep "bash"  # Find all running bash scripts
+```
+
+### **📌 Killing a Process (`kill`)**  
+```sh
+kill -9 1234  # Kill process with PID 1234
+```
+
+### **📌 Kill a Process by Name (`pkill`)**  
+```sh
+pkill -f "script.sh"  # Kill all processes running 'script.sh'
+```
+
+---
+
+## **3️⃣ Signal Handling (`trap`, `kill -SIGTERM $PID`)**  
+
+### **📌 Handling Signals with `trap`**  
+```sh
+#!/bin/bash
+
+trap "echo 'CTRL+C is disabled!'; exit" SIGINT  # Prevent script from stopping with CTRL+C
+
+while true; do
+  echo "Running... Press CTRL+C to try stopping"
+  sleep 2
+done
+```
+
+### **📌 Sending a Signal to a Process (`kill -SIGTERM $PID`)**  
+```sh
+kill -SIGTERM 1234  # Gracefully stop process with PID 1234
+```
+
+---
+
+## **4️⃣ Debugging Scripts (`bash -x script.sh`, `set -x`, `set +x`)**  
+
+### **📌 Run Script in Debug Mode (`bash -x script.sh`)**  
+```sh
+bash -x myscript.sh
+```
+
+### **📌 Enable Debugging Inside a Script (`set -x`)**  
+```sh
+#!/bin/bash
+set -x  # Enable debug mode
+
+echo "This is a debug test"
+
+set +x  # Disable debug mode
+echo "Debugging disabled now"
+```
+
+---
+
+### **🔥 Summary**  
+| Concept | Command |
+|---------|----------|
+| Run in Background | `command &` |
+| Bring to Foreground | `fg %1` |
+| Send to Background | `CTRL+Z` → `bg` |
+| Get Script PID | `echo $$` |
+| Get Last Process PID | `echo $!` |
+| List Processes | `ps aux` |
+| Kill Process | `kill -9 PID` |
+| Kill by Name | `pkill -f "name"` |
+| Trap Signal | `trap "command" SIGNAL` |
+| Debug Script | `bash -x script.sh` |
+
+---
 
 
-
+Let me know if you want more examples before we move forward! 😎
 
 🔥 **You're doing great!** 🚀 Let me know if you have any questions before moving to the next section! 😊
