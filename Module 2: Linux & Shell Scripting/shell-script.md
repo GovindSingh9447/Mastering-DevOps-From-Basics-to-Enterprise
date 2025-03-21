@@ -297,6 +297,367 @@ done
 ---
 
 
+## **🟠 Functions & Script Parameters**  
+
+### **1️⃣ Defining Functions (`function my_func {}`)**  
+Functions help us organize reusable blocks of code.
+
+```sh
+#!/bin/bash
+
+# Defining a function
+function greet() {
+  echo "Hello, Singh! Welcome to shell scripting."
+}
+
+# Calling the function
+greet
+```
+
+Alternative syntax:
+```sh
+#!/bin/bash
+
+greet() {
+  echo "Hello, Singh! You are doing great!"
+}
+
+greet  # Calling the function
+```
+
+---
+
+### **2️⃣ Passing Arguments to Functions (`$1, $2, ...`)**  
+We can pass values to functions and access them using `$1`, `$2`, etc.
+
+```sh
+#!/bin/bash
+
+greet() {
+  echo "Hello, $1! You are $2 years old."
+}
+
+greet "Singh" 25  # Passing arguments
+```
+🔹 `$1` → First argument (`Singh`)  
+🔹 `$2` → Second argument (`25`)  
+
+---
+
+### **3️⃣ Returning Values from Functions (`return`, `echo`)**  
+
+#### **Using `return` (Returns exit code between 0-255)**
+```sh
+#!/bin/bash
+
+calculate_sum() {
+  return $(($1 + $2))
+}
+
+calculate_sum 5 10
+echo "Sum: $?"  # $? captures the return value
+```
+
+#### **Using `echo` (Preferred method for larger values)**
+```sh
+#!/bin/bash
+
+calculate_sum() {
+  echo $(($1 + $2))
+}
+
+result=$(calculate_sum 5 10)
+echo "Sum: $result"
+```
+
+---
+
+### **4️⃣ Sourcing Scripts (`source filename.sh`)**  
+Sourcing (`source` or `.`) allows running another script within the current shell.
+
+#### **Example 1: Create a script (`helper.sh`)**
+```sh
+#!/bin/bash
+greet() {
+  echo "Hello from the helper script!"
+}
+```
+
+#### **Example 2: Source it in another script**
+```sh
+#!/bin/bash
+source helper.sh  # or . helper.sh
+
+greet  # Calling the function from helper.sh
+```
+✅ Without `source`, running `./helper.sh` would execute in a **new shell** and not import functions into the current script.
+
+---
+
+### **5️⃣ Script Arguments (`$1, $2, $@, $#, $?, $$`)**  
+
+| Symbol  | Meaning |
+|---------|---------|
+| `$1`, `$2`, ... | Positional arguments (1st, 2nd, ...) |
+| `$@`  | All arguments as separate words |
+| `$*`  | All arguments as a single string |
+| `$#`  | Number of arguments passed |
+| `$?`  | Exit status of the last command |
+| `$$`  | Process ID (PID) of the script |
+
+#### **Example: Script that processes arguments (`args.sh`)**
+```sh
+#!/bin/bash
+
+echo "Script name: $0"
+echo "First argument: $1"
+echo "Second argument: $2"
+echo "All arguments (\$@): $@"
+echo "All arguments (\$*): $*"
+echo "Number of arguments: $#"
+echo "Exit status of last command: $?"
+echo "Script Process ID (PID): $$"
+```
+
+Run it:
+```sh
+chmod +x args.sh
+./args.sh Hello World
+```
+
+✅ **Output:**
+```
+Script name: ./args.sh
+First argument: Hello
+Second argument: World
+All arguments ($@): Hello World
+All arguments ($*): Hello World
+Number of arguments: 2
+Exit status of last command: 0
+Script Process ID (PID): 12345
+```
+
+
+---
+
+## **🔵 Working with Files & Directories**  
+
+### **1️⃣ File Test Operators (`-f, -d, -e, -r, -w, -x`)**  
+These operators help check file/directory properties inside a script.
+
+| Operator | Description |
+|----------|-------------|
+| `-f` | File exists and is a regular file |
+| `-d` | Directory exists |
+| `-e` | File or directory exists |
+| `-r` | File is readable |
+| `-w` | File is writable |
+| `-x` | File is executable |
+
+#### **Example: Check file properties**
+```sh
+#!/bin/bash
+
+file="test.txt"
+
+if [ -f "$file" ]; then
+  echo "$file is a regular file."
+fi
+
+if [ -d "$file" ]; then
+  echo "$file is a directory."
+fi
+
+if [ -r "$file" ]; then
+  echo "$file is readable."
+fi
+
+if [ -w "$file" ]; then
+  echo "$file is writable."
+fi
+
+if [ -x "$file" ]; then
+  echo "$file is executable."
+fi
+```
+
+---
+
+### **2️⃣ Reading/Writing Files (`cat`, `echo "data" > file`)**  
+
+#### **Writing data to a file**
+```sh
+#!/bin/bash
+echo "Hello Singh!" > file.txt
+```
+
+#### **Reading data from a file**
+```sh
+#!/bin/bash
+cat file.txt
+```
+
+---
+
+### **3️⃣ Appending to Files (`>> file`)**  
+✅ `>>` adds data without overwriting.
+
+```sh
+#!/bin/bash
+echo "This is an additional line." >> file.txt
+```
+
+---
+
+### **4️⃣ Checking File Existence (`if [ -f filename ]; then ...`)**  
+
+#### **Example:**
+```sh
+#!/bin/bash
+
+file="data.txt"
+
+if [ -f "$file" ]; then
+  echo "$file exists."
+else
+  echo "$file does not exist."
+fi
+```
+
+---
+
+### **5️⃣ Finding Files (`find /path -name "file*"`)**  
+
+#### **Find files by name**
+```sh
+find /home -name "test.txt"
+```
+
+#### **Find directories**
+```sh
+find /home -type d -name "project"
+```
+
+#### **Find files modified in the last 7 days**
+```sh
+find /home -type f -mtime -7
+```
+
+---
+
+### **6️⃣ Processing Files (`awk`, `sed`, `cut`, `paste`, `grep`)**  
+
+✅ **Using `awk` (Column Processing)**  
+```sh
+awk '{print $1, $3}' file.txt  # Prints 1st and 3rd columns
+```
+
+✅ **Using `sed` (Find and Replace)**
+```sh
+sed 's/old/new/g' file.txt  # Replaces 'old' with 'new'
+```
+
+✅ **Using `cut` (Extracting Specific Fields)**
+```sh
+cut -d':' -f1 /etc/passwd  # Extracts usernames from /etc/passwd
+```
+
+✅ **Using `paste` (Merging Files Line-by-Line)**
+```sh
+paste file1.txt file2.txt
+```
+
+✅ **Using `grep` (Pattern Searching)**
+```sh
+grep "error" logfile.txt  # Searches for 'error' in logfile.txt
+```
+
+
+### **🔥 Script Using `awk`, `sed`, `cut`, `paste`, and `grep` in One Go!**  
+
+This script demonstrates all five processing commands: **awk, sed, cut, paste, and grep**.  
+
+---
+
+### **📌 Problem Statement**  
+We have a `students.txt` file with student data in the format:  
+```txt
+ID:Name:Age:Grade
+101:John:18:A
+102:Alice:19:B
+103:Bob:20:A
+104:Charlie:18:C
+```
+We will:
+1. **Use `cut`** to extract Names and Grades.
+2. **Use `grep`** to find students with Grade A.
+3. **Use `awk`** to format output.
+4. **Use `sed`** to modify the output.
+5. **Use `paste`** to merge output with another file (`extra.txt`).
+
+---
+
+### **🔹 Shell Script (`process_students.sh`)**
+```sh
+#!/bin/bash
+
+# Step 1: Extract Names and Grades using 'cut'
+echo "Extracting Names and Grades..."
+cut -d':' -f2,4 students.txt > names_grades.txt
+echo "Names and Grades extracted: "
+cat names_grades.txt
+echo ""
+
+# Step 2: Find Students with Grade 'A' using 'grep'
+echo "Finding students with Grade A..."
+grep ":A" names_grades.txt > grade_A.txt
+cat grade_A.txt
+echo ""
+
+# Step 3: Format Output using 'awk'
+echo "Formatted student list using awk..."
+awk -F':' '{print "Student: "$1" | Grade: "$2}' grade_A.txt > formatted.txt
+cat formatted.txt
+echo ""
+
+# Step 4: Replace 'Grade' with 'Achieved' using 'sed'
+echo "Modifying output using sed..."
+sed -i 's/Grade/Achieved/g' formatted.txt
+cat formatted.txt
+echo ""
+
+# Step 5: Merge with another file using 'paste'
+echo "Creating extra info file..."
+echo -e "Excellent\nGood\nExcellent\nAverage" > extra.txt
+paste formatted.txt extra.txt > final_report.txt
+echo "Final Merged Report:"
+cat final_report.txt
+echo ""
+
+echo "✅ Processing complete!"
+```
+
+---
+
+### **📌 Explanation**
+1. **`cut -d':' -f2,4 students.txt > names_grades.txt`**  
+   - Extracts **Name and Grade** (2nd and 4th columns).
+2. **`grep ":A" names_grades.txt > grade_A.txt`**  
+   - Filters students with Grade A.
+3. **`awk -F':' '{print "Student: "$1" | Grade: "$2}' grade_A.txt > formatted.txt`**  
+   - Formats the output as **Student: Name | Grade: A**.
+4. **`sed -i 's/Grade/Achieved/g' formatted.txt`**  
+   - Replaces "Grade" with "Achieved".
+5. **`paste formatted.txt extra.txt > final_report.txt`**  
+   - Merges the processed student list with additional remarks from `extra.txt`.
+
+---
+
+### **🔹 Output of `final_report.txt`**
+```txt
+Student: John | Achieved: A	Excellent
+Student: Bob | Achieved: A	Excellent
+```
 
 ---
 
