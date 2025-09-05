@@ -14,24 +14,24 @@ This comprehensive curriculum takes you from DevOps basics to enterprise-level i
 
 ### **Foundation (Start Here)**
 
-1. **[DevOps & DevSecOps Fundamentals](./Module%201%3A%20%20Introduction%20to%20DevOps%20%26%20DevSecOps%20)** - Learn DevOps principles and culture
-2. **[Linux & Shell Scripting](./Module%202%3A%20Linux%20%26%20Shell%20Scripting)** - Master Linux and automation
-3. **[Git Version Control](./Module%203%3A%20GIT)** - Advanced Git workflows and collaboration
+1. **[DevOps & DevSecOps Fundamentals](./Module%2001%3A%20Introduction%20to%20DevOps%20%26%20DevSecOps)** - Learn DevOps principles and culture
+2. **[Linux & Shell Scripting](./Module%2002%3A%20Linux%20%26%20Shell%20Scripting)** - Master Linux and automation
+3. **[Git Version Control](./Module%2003%3A%20GIT)** - Advanced Git workflows and collaboration
 
 ### **Build & Deploy**
 
-4. **[Build Tools](./Module%204%3A%20Build%20Tools)** - Maven, Gradle, NPM, and multi-language builds
-5. **[Docker Containerization](./Module%205%3A%20Docker)** - Container fundamentals and best practices
+4. **[Build Tools](./Module%2004%3A%20Build%20Tools)** - Maven, Gradle, NPM, and multi-language builds
+5. **[Docker Containerization](./Module%2005%3A%20Docker)** - Container fundamentals and best practices
 
 ### **Automation & Quality**
 
-6. **[CI/CD Pipeline Automation](./Module%206%3A%20CI-CD)** - Jenkins, GitHub Actions, GitLab CI/CD
-7. **[SonarQube Code Quality](./Module%207%3A%20SonarQube)** - Code quality analysis and security scanning
+6. **[CI/CD Pipeline Automation](./Module%2006%3A%20CI-CD)** - Jenkins, GitHub Actions, GitLab CI/CD
+7. **[SonarQube Code Quality](./Module%2007%3A%20SonarQube)** - Code quality analysis and security scanning
 
 ### **Security & Management**
 
-8. **[Security Tools & DevSecOps](./Module%208%3A%20Security%20Tools)** - Security scanning and compliance
-9. **[Nexus Artifact Management](./Module%209%3A%20Nexus%20Artifact%20Management)** - Repository management and dependencies
+8. **[Security Tools & DevSecOps](./Module%2008%3A%20Security%20Tools)** - Security scanning and compliance
+9. **[Nexus Artifact Management](./Module%2009%3A%20Nexus%20Artifact%20Management)** - Repository management and dependencies
 
 ### **Advanced Orchestration & Infrastructure**
 
@@ -89,7 +89,7 @@ After completing this curriculum, you'll know how to:
 git clone https://github.com/your-org/Mastering-DevOps-From-Basics-to-Enterprise.git
 
 # Navigate to the first module
-cd "Module 1:  Introduction to DevOps & DevSecOps"
+cd "Module 01: Introduction to DevOps & DevSecOps"
 
 # Start learning!
 ```
@@ -111,6 +111,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🎉 Ready to Start?
 
-**Begin your DevOps journey with [Module 1: DevOps & DevSecOps Fundamentals](./Module%201%3A%20%20Introduction%20to%20DevOps%20%26%20DevSecOps%20)**
+**Begin your DevOps journey with [Module 1: DevOps & DevSecOps Fundamentals](./Module%2001%3A%20Introduction%20to%20DevOps%20%26%20DevSecOps)**
 
 _Happy learning! 🚀_
