@@ -86,7 +86,7 @@ After completing this curriculum, you'll know how to:
 
 ```bash
 # Clone this repository
-git clone https://github.com/your-org/Mastering-DevOps-From-Basics-to-Enterprise.git
+git clone https://github.com/GovindSingh9447/Mastering-DevOps-From-Basics-to-Enterprise.git
 
 # Navigate to the first module
 cd "Module 01: Introduction to DevOps & DevSecOps"
