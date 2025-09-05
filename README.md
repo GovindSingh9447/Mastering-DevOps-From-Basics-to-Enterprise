@@ -33,13 +33,14 @@ This comprehensive curriculum takes you from DevOps basics to enterprise-level i
 8. **[Security Tools & DevSecOps](./Module%208%3A%20Security%20Tools)** - Security scanning and compliance
 9. **[Nexus Artifact Management](./Module%209%3A%20Nexus%20Artifact%20Management)** - Repository management and dependencies
 
-### **Advanced Orchestration**
+### **Advanced Orchestration & Infrastructure**
 
 10. **[Kubernetes](./Module%2010%3A%20Kubernetes)** - Container orchestration and enterprise patterns
+11. **[Infrastructure as Code (IaC)](./Module%2011%3A%20Infrastructure%20as%20Code%20%28IaC%29)** - Terraform, CloudFormation, Pulumi, and Ansible
 
 ## ✨ What's Included
 
-- **📖 10 Complete Modules** - Over 15,000 lines of detailed content
+- **📖 11 Complete Modules** - Over 20,000 lines of detailed content
 - **🛠️ Hands-On Examples** - Real-world configurations and practical exercises
 - **☁️ Multi-Cloud Support** - AWS, Azure, and Google Cloud examples
 - **🔒 Security Focus** - DevSecOps practices throughout all modules
@@ -54,7 +55,8 @@ After completing this curriculum, you'll know how to:
 - ✅ **Implement CI/CD pipelines** with Jenkins, GitHub Actions, and GitLab
 - ✅ **Ensure code quality** and security throughout the development process
 - ✅ **Monitor and troubleshoot** production systems
-- ✅ **Automate infrastructure** and deployments
+- ✅ **Automate infrastructure** with Terraform, CloudFormation, and Pulumi
+- ✅ **Manage artifacts** and dependencies with Nexus Repository
 - ✅ **Apply security best practices** in all aspects of DevOps
 
 ## 📋 Prerequisites
