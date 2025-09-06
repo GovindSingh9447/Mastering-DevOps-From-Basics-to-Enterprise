@@ -19,7 +19,7 @@
 This comprehensive curriculum takes you from DevOps basics to enterprise-level implementation. Perfect for developers, system administrators, and anyone looking to master modern DevOps practices.
 
 ### 🔍 **Keywords & Technologies Covered**
-`DevOps` `Docker` `Kubernetes` `CI/CD` `Jenkins` `GitHub Actions` `GitLab CI` `Terraform` `CloudFormation` `Pulumi` `Ansible` `AWS` `Azure` `GCP` `Linux` `Shell Scripting` `Git` `Maven` `Gradle` `NPM` `SonarQube` `Security Scanning` `DevSecOps` `Nexus` `Artifact Management` `Container Orchestration` `Infrastructure as Code` `Monitoring` `Prometheus` `Grafana` `Helm` `YAML` `Docker Compose` `Microservices` `Cloud Native` `Production Ready` `Best Practices` `Enterprise` `Learning Path` `Tutorial` `Guide` `Free Course` `2024`
+`DevOps` `Docker` `Kubernetes` `CI/CD` `Jenkins` `GitHub Actions` `GitLab CI` `Terraform` `CloudFormation` `Pulumi` `Ansible` `AWS` `Azure` `GCP` `Linux` `Shell Scripting` `Git` `Maven` `Gradle` `NPM` `SonarQube` `Security Scanning` `DevSecOps` `Nexus` `Artifact Management` `Container Orchestration` `Infrastructure as Code` `Monitoring` `Prometheus` `Grafana` `Helm` `YAML` `Docker Compose` `Microservices` `Cloud Native` `Production Ready` `Best Practices` `Enterprise` `Learning Path` `Tutorial` `Guide` `Free Course` `2025`
 
 ## 📋 Table of Contents
 
