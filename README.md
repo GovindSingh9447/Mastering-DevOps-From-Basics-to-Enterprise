@@ -1,14 +1,37 @@
-# Mastering DevOps: From Basics to Enterprise
+# 🚀 Mastering DevOps: From Basics to Enterprise
 
-> **A complete learning path for DevOps engineers, covering everything from fundamentals to advanced enterprise practices**
+> **Complete DevOps Learning Path 2024 - 11 Modules | Docker, Kubernetes, CI/CD, Terraform, Security | Free Comprehensive Guide for Beginners to Advanced**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![DevOps](https://img.shields.io/badge/DevOps-Complete%20Guide-blue.svg)](https://github.com/your-org/Mastering-DevOps-From-Basics-to-Enterprise)
-[![Kubernetes](https://img.shields.io/badge/Kubernetes-Included-green.svg)](https://kubernetes.io/)
+[![DevOps](https://img.shields.io/badge/DevOps-Complete%20Guide-blue.svg)](https://github.com/GovindSingh9447/Mastering-DevOps-From-Basics-to-Enterprise)
+[![Kubernetes](https://img.shields.io/badge/Kubernetes-Production%20Ready-green.svg)](https://kubernetes.io/)
+[![Docker](https://img.shields.io/badge/Docker-Containerization-blue.svg)](https://docker.com/)
+[![Terraform](https://img.shields.io/badge/Terraform-Infrastructure%20as%20Code-purple.svg)](https://terraform.io/)
+[![CI/CD](https://img.shields.io/badge/CI%2FCD-Jenkins%20%7C%20GitHub%20Actions-orange.svg)](https://github.com/features/actions)
+[![Security](https://img.shields.io/badge/Security-DevSecOps-red.svg)](https://owasp.org/)
+[![Free](https://img.shields.io/badge/Price-Free-brightgreen.svg)](#)
+[![Beginner Friendly](https://img.shields.io/badge/Level-Beginner%20to%20Advanced-lightblue.svg)](#)
+[![Stars](https://img.shields.io/github/stars/GovindSingh9447/Mastering-DevOps-From-Basics-to-Enterprise.svg?style=social&label=Star)](https://github.com/GovindSingh9447/Mastering-DevOps-From-Basics-to-Enterprise/stargazers)
+[![Forks](https://img.shields.io/github/forks/GovindSingh9447/Mastering-DevOps-From-Basics-to-Enterprise.svg?style=social&label=Fork)](https://github.com/GovindSingh9447/Mastering-DevOps-From-Basics-to-Enterprise/network/members)
 
-## What You'll Learn
+## 🎯 What You'll Learn
 
 This comprehensive curriculum takes you from DevOps basics to enterprise-level implementation. Perfect for developers, system administrators, and anyone looking to master modern DevOps practices.
+
+### 🔍 **Keywords & Technologies Covered**
+`DevOps` `Docker` `Kubernetes` `CI/CD` `Jenkins` `GitHub Actions` `GitLab CI` `Terraform` `CloudFormation` `Pulumi` `Ansible` `AWS` `Azure` `GCP` `Linux` `Shell Scripting` `Git` `Maven` `Gradle` `NPM` `SonarQube` `Security Scanning` `DevSecOps` `Nexus` `Artifact Management` `Container Orchestration` `Infrastructure as Code` `Monitoring` `Prometheus` `Grafana` `Helm` `YAML` `Docker Compose` `Microservices` `Cloud Native` `Production Ready` `Best Practices` `Enterprise` `Learning Path` `Tutorial` `Guide` `Free Course` `2024`
+
+## 📋 Table of Contents
+
+- [🎯 What You'll Learn](#-what-youll-learn)
+- [📚 Complete Learning Path](#-complete-learning-path)
+- [✨ What's Included](#-whats-included)
+- [🎯 What You'll Be Able To Do](#-what-youll-be-able-to-do)
+- [📋 Prerequisites](#-prerequisites)
+- [🚀 How to Use This Repository](#-how-to-use-this-repository)
+- [📝 Quick Start](#-quick-start)
+- [🤝 Contributing](#-contributing)
+- [📄 License](#-license)
 
 ## 📚 Complete Learning Path
 
