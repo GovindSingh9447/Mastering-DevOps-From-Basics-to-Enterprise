@@ -1,6 +1,6 @@
 # 🚀 Mastering DevOps: From Basics to Enterprise
 
-> **Complete DevOps Learning Path 2024 - 11 Modules | Docker, Kubernetes, CI/CD, Terraform, Security | Free Comprehensive Guide for Beginners to Advanced**
+> **Complete DevOps Learning Path 2025-26 - 11 Modules | Docker, Kubernetes, CI/CD, Terraform, Security | Free Comprehensive Guide for Beginners to Advanced**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![DevOps](https://img.shields.io/badge/DevOps-Complete%20Guide-blue.svg)](https://github.com/GovindSingh9447/Mastering-DevOps-From-Basics-to-Enterprise)
