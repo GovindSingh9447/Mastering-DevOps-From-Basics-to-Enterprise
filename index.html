@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Mastering DevOps: From Basics to Enterprise</title>
+    <meta
+      name="description"
+      content="Complete DevOps Learning Path - 11 Modules covering Docker, Kubernetes, CI/CD, Terraform, and more"
+    />
+    <link
+      rel="stylesheet"
+      href="css/style.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css"
+    />
+  </head>
+  <body>
+    <!-- Mobile Menu Toggle -->
+    <button
+      class="mobile-menu-toggle"
+      id="mobileMenuToggle"
+      aria-label="Toggle menu"
+    >
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar Navigation -->
+    <aside
+      class="sidebar"
+      id="sidebar"
+    >
+      <div class="sidebar-header">
+        <h1 class="logo">🚀 DevOps</h1>
+        <p class="subtitle">Mastering DevOps</p>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <h3 class="nav-section-title">Foundation</h3>
+          <ul
+            class="nav-list"
+            id="navList"
+          >
+            <!-- Modules will be loaded here by JavaScript -->
+          </ul>
+        </div>
+      </nav>
+      <div class="sidebar-footer">
+        <a
+          href="https://github.com/GovindSingh9447/Mastering-DevOps-From-Basics-to-Enterprise"
+          target="_blank"
+          class="github-link"
+        >
+          <i class="fab fa-github"></i> View on GitHub
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main
+      class="main-content"
+      id="mainContent"
+    >
+      <div class="content-header">
+        <div
+          class="breadcrumb"
+          id="breadcrumb"
+        >
+          <a
+            href="#"
+            onclick="loadModule('home')"
+            >Home</a
+          >
+        </div>
+        <div class="content-actions">
+          <button
+            class="btn-icon"
+            onclick="toggleDarkMode()"
+            aria-label="Toggle dark mode"
+          >
+            <i
+              class="fas fa-moon"
+              id="darkModeIcon"
+            ></i>
+          </button>
+          <button
+            class="btn-icon"
+            onclick="printContent()"
+            aria-label="Print"
+          >
+            <i class="fas fa-print"></i>
+          </button>
+        </div>
+      </div>
+      <div
+        class="content-body"
+        id="contentBody"
+      >
+        <!-- Home page content -->
+        <div id="homeContent">
+          <div class="hero-section">
+            <h1>🚀 Mastering DevOps: From Basics to Enterprise</h1>
+            <p class="lead">
+              Complete DevOps Learning Path 2025-26 - 11 Modules | Docker,
+              Kubernetes, CI/CD, Terraform, Security
+            </p>
+            <div class="badges">
+              <span class="badge">Free</span>
+              <span class="badge">Beginner to Advanced</span>
+              <span class="badge">Production Ready</span>
+            </div>
+          </div>
+
+          <div class="intro-section">
+            <h2>🎯 What You'll Learn</h2>
+            <p>
+              This comprehensive curriculum takes you from DevOps basics to
+              enterprise-level implementation. Perfect for developers, system
+              administrators, and anyone looking to master modern DevOps
+              practices.
+            </p>
+          </div>
+
+          <div class="modules-grid">
+            <h2>📚 Complete Learning Path</h2>
+            <div
+              class="modules-list"
+              id="modulesGrid"
+            >
+              <!-- Modules grid will be populated by JavaScript -->
+            </div>
+          </div>
+
+          <div class="features-section">
+            <h2>✨ What's Included</h2>
+            <ul class="features-list">
+              <li>
+                <i class="fas fa-check-circle"></i>
+                <strong>11 Complete Modules</strong> - Over 20,000 lines of
+                detailed content
+              </li>
+              <li>
+                <i class="fas fa-check-circle"></i>
+                <strong>Hands-On Examples</strong> - Real-world configurations
+                and practical exercises
+              </li>
+              <li>
+                <i class="fas fa-check-circle"></i>
+                <strong>Multi-Cloud Support</strong> - AWS, Azure, and Google
+                Cloud examples
+              </li>
+              <li>
+                <i class="fas fa-check-circle"></i>
+                <strong>Security Focus</strong> - DevSecOps practices throughout
+                all modules
+              </li>
+              <li>
+                <i class="fas fa-check-circle"></i>
+                <strong>Production Ready</strong> - Enterprise-grade
+                implementations and best practices
+              </li>
+            </ul>
+          </div>
+
+          <div class="quick-start-section">
+            <h2>🚀 Quick Start</h2>
+            <pre><code class="language-bash"># Clone this repository
+git clone https://github.com/GovindSingh9447/Mastering-DevOps-From-Basics-to-Enterprise.git
+
+# Navigate to the first module
+cd "Module 01: Introduction to DevOps & DevSecOps"
+
+# Start learning!</code></pre>
+          </div>
+        </div>
+
+        <!-- Module content will be rendered here -->
+        <div
+          id="moduleContent"
+          class="markdown-content"
+          style="display: none"
+        ></div>
+      </div>
+      <div class="content-footer">
+        <p>Made with ❤️ for the DevOps community by GovindSingh9447</p>
+        <p>
+          <a
+            href="https://github.com/GovindSingh9447/Mastering-DevOps-From-Basics-to-Enterprise"
+            target="_blank"
+            >GitHub</a
+          >
+          |
+          <a
+            href="#"
+            onclick="loadModule('home')"
+            >Home</a
+          >
+        </p>
+      </div>
+    </main>
+
+    <!-- Loading Spinner -->
+    <div
+      class="loading-spinner"
+      id="loadingSpinner"
+      style="display: none"
+    >
+      <div class="spinner"></div>
+      <p>Loading content...</p>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
