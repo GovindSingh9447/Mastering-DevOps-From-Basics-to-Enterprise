@@ -13,33 +13,41 @@ function getBasePath() {
   const isGitHubPages = hostname.includes('github.io');
 
   if (isGitHubPages) {
-    // Try multiple methods to detect the base path
+    console.log('GitHub Pages detected. Pathname:', pathname, 'Href:', href);
 
-    // Method 1: Extract from pathname (most reliable)
-    // For: https://username.github.io/repo-name/ -> /repo-name/
-    const pathParts = pathname.split('/').filter((p) => p);
-    if (pathParts.length > 0 && pathParts[0] !== 'index.html') {
-      const repoName = pathParts[0];
-      console.log('Detected repo name from pathname:', repoName);
+    // Method 1: Extract from URL (most reliable for GitHub Pages)
+    // URL format: https://username.github.io/repo-name/ or https://username.github.io/repo-name
+    const urlMatch = href.match(/https?:\/\/[^/]+\.github\.io\/([^/?#]+)/);
+    if (urlMatch && urlMatch[1]) {
+      const repoName = urlMatch[1];
+      console.log('✓ Detected repo name from URL:', repoName);
       return '/' + repoName + '/';
     }
 
-    // Method 2: Extract from full URL
-    // For: https://username.github.io/repo-name/ -> /repo-name/
-    const urlMatch = href.match(/github\.io\/([^/]+)/);
-    if (urlMatch && urlMatch[1]) {
-      console.log('Detected repo name from URL:', urlMatch[1]);
-      return '/' + urlMatch[1] + '/';
+    // Method 2: Extract from pathname
+    // Pathname format: /repo-name/ or /repo-name/index.html
+    const pathParts = pathname
+      .split('/')
+      .filter((p) => p && p !== 'index.html');
+    if (pathParts.length > 0) {
+      const repoName = pathParts[0];
+      console.log('✓ Detected repo name from pathname:', repoName);
+      return '/' + repoName + '/';
     }
 
     // Method 3: Try to get from script src (fallback)
-    const scripts = document.getElementsByTagName('script');
-    for (let script of scripts) {
-      if (script.src && script.src.includes('github.io')) {
-        const scriptMatch = script.src.match(/github\.io\/([^/]+)/);
-        if (scriptMatch && scriptMatch[1]) {
-          console.log('Detected repo name from script src:', scriptMatch[1]);
-          return '/' + scriptMatch[1] + '/';
+    if (typeof document !== 'undefined') {
+      const scripts = document.getElementsByTagName('script');
+      for (let script of scripts) {
+        if (script.src && script.src.includes('github.io')) {
+          const scriptMatch = script.src.match(/github\.io\/([^/]+)/);
+          if (scriptMatch && scriptMatch[1]) {
+            console.log(
+              '✓ Detected repo name from script src:',
+              scriptMatch[1]
+            );
+            return '/' + scriptMatch[1] + '/';
+          }
         }
       }
     }
@@ -143,13 +151,96 @@ function renderModulesGrid() {
     modulesByCategory[category].forEach((module) => {
       const card = document.createElement('div');
       card.className = 'module-card';
+
+      // Show file count if module has multiple files
+      const fileCount = module.files ? module.files.length : 0;
+      const fileInfo =
+        fileCount > 0
+          ? `<span class="file-count">${fileCount} files</span>`
+          : '';
+
       card.innerHTML = `
                 <h3>${module.order}. ${module.name}</h3>
-                <p>Click to view module content</p>
+                <p>Click to view module content ${fileInfo}</p>
             `;
       card.onclick = () => loadModule(module.id);
       modulesGrid.appendChild(card);
     });
+  });
+}
+
+function renderModuleFileTabs(module, activeIndex = 0) {
+  const moduleFileTabs = document.getElementById('moduleFileTabs');
+  if (!moduleFileTabs) {
+    console.error('moduleFileTabs element not found in DOM');
+    return;
+  }
+
+  if (!module.files || module.files.length <= 1) {
+    console.log('No files or only one file, hiding tabs');
+    moduleFileTabs.innerHTML = '';
+    moduleFileTabs.style.display = 'none';
+    return;
+  }
+
+  console.log('Rendering file tabs for module:', module.name);
+  console.log('Files array:', module.files);
+  console.log('Active index:', activeIndex);
+
+  // Clear existing tabs
+  moduleFileTabs.innerHTML = '';
+
+  // Create tabs for each file
+  module.files.forEach((file, index) => {
+    const tab = document.createElement('button');
+    tab.className = `file-tab ${index === activeIndex ? 'active' : ''}`;
+    tab.innerHTML = `${file.icon || '📄'} ${file.name}`;
+    tab.setAttribute('type', 'button');
+    tab.setAttribute('aria-label', `Switch to ${file.name}`);
+    tab.onclick = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('Tab clicked:', file.name, 'index:', index);
+      loadModule(module.id, index);
+    };
+    moduleFileTabs.appendChild(tab);
+    console.log('Created tab:', file.name);
+  });
+
+  // Make sure tabs are visible - force visibility with multiple methods
+  moduleFileTabs.style.setProperty('display', 'flex', 'important');
+  moduleFileTabs.style.setProperty('visibility', 'visible', 'important');
+  moduleFileTabs.style.setProperty('opacity', '1', 'important');
+  moduleFileTabs.classList.add('show-tabs');
+
+  // Force a reflow to ensure styles are applied
+  void moduleFileTabs.offsetHeight;
+
+  console.log(
+    'File tabs rendered successfully. Total tabs:',
+    moduleFileTabs.children.length
+  );
+
+  // Verify tabs are actually visible
+  const computedStyle = window.getComputedStyle(moduleFileTabs);
+  console.log('Tabs container state:', {
+    display: computedStyle.display,
+    visibility: computedStyle.visibility,
+    opacity: computedStyle.opacity,
+    height: moduleFileTabs.offsetHeight,
+    width: moduleFileTabs.offsetWidth,
+    children: moduleFileTabs.children.length,
+    hasContent: moduleFileTabs.innerHTML.length > 0,
+  });
+
+  // Debug: log each tab
+  Array.from(moduleFileTabs.children).forEach((tab, idx) => {
+    console.log(
+      `Tab ${idx}:`,
+      tab.textContent,
+      'visible:',
+      tab.offsetHeight > 0
+    );
   });
 }
 
@@ -259,18 +350,59 @@ async function loadModule(moduleId, fileIndex = 0) {
 
   // Handle modules with multiple files
   let fileToLoad = module.path;
-  if (module.files && module.files.length > 0) {
-    // Show file tabs
+
+  // Check if module has multiple files
+  if (module.files && Array.isArray(module.files) && module.files.length > 1) {
+    // Show file tabs only if there are multiple files
+    console.log('✓ Module has multiple files:', module.files.length);
+    console.log(
+      '✓ Files:',
+      module.files.map((f) => f.name)
+    );
+
+    // Render tabs FIRST before loading content
+    console.log(
+      'Rendering file tabs for module with',
+      module.files.length,
+      'files'
+    );
     renderModuleFileTabs(module, fileIndex);
-    moduleFileTabs.style.display = 'flex';
-    
+
+    // Wait a tick to ensure DOM is updated
+    await new Promise((resolve) => setTimeout(resolve, 10));
+
+    // Force tabs to be visible immediately
+    if (moduleFileTabs && moduleFileTabs.children.length > 0) {
+      moduleFileTabs.style.setProperty('display', 'flex', 'important');
+      moduleFileTabs.style.setProperty('visibility', 'visible', 'important');
+      moduleFileTabs.style.setProperty('opacity', '1', 'important');
+      moduleFileTabs.classList.add('show-tabs');
+      console.log(
+        '✓ Tabs container forced visible. Tab count:',
+        moduleFileTabs.children.length
+      );
+    } else {
+      console.warn('⚠ Tabs container is empty or not found!');
+    }
+
     // Load the selected file
     if (module.files[fileIndex]) {
       fileToLoad = module.files[fileIndex].path;
+      console.log('✓ Loading file:', fileToLoad);
+    } else {
+      // Default to first file if index is out of range
+      fileToLoad = module.files[0].path;
+      fileIndex = 0;
+      console.log('✓ Using first file (index out of range):', fileToLoad);
     }
   } else {
     // Hide file tabs for modules without multiple files
-    moduleFileTabs.style.display = 'none';
+    console.log('✗ Module does not have multiple files');
+    if (moduleFileTabs) {
+      moduleFileTabs.style.display = 'none';
+      moduleFileTabs.classList.remove('show-tabs');
+      moduleFileTabs.innerHTML = '';
+    }
   }
 
   // Show loading spinner
@@ -310,27 +442,57 @@ async function loadModule(moduleId, fileIndex = 0) {
         .join('/');
 
       // Build full path with base path (don't encode base path, it's already a URL path)
-      return BASE_PATH === '/'
-        ? encodedModulePath
-        : BASE_PATH + encodedModulePath;
+      // Ensure BASE_PATH ends with / and encodedModulePath doesn't start with /
+      const base = BASE_PATH.endsWith('/') ? BASE_PATH : BASE_PATH + '/';
+      const module = encodedModulePath.startsWith('/')
+        ? encodedModulePath.substring(1)
+        : encodedModulePath;
+
+      return BASE_PATH === '/' ? encodedModulePath : base + module;
+    }
+
+    // Re-check BASE_PATH before encoding (in case it wasn't set correctly)
+    const currentBasePath = getBasePath();
+    if (currentBasePath !== BASE_PATH) {
+      console.log('Base path updated from', BASE_PATH, 'to', currentBasePath);
+      BASE_PATH = currentBasePath;
     }
 
     const encodedPath = encodePath(fileToLoad);
-    let response = await fetch(encodedPath);
-
     console.log('Attempting to fetch:', encodedPath);
+    console.log('Base path:', BASE_PATH);
+    console.log('Original path:', fileToLoad);
+
+    let response = await fetch(encodedPath);
 
     // Try alternative paths if main path fails
     if (!response.ok && module.altPaths) {
-      console.log('Trying alternative paths...');
+      console.log('Main path failed, trying alternative paths...');
       for (const altPath of module.altPaths) {
         const encodedAltPath = encodePath(altPath);
         console.log('Trying alternative:', encodedAltPath);
         response = await fetch(encodedAltPath);
         if (response.ok) {
-          module.path = altPath; // Update path for future use
-          console.log('Success with alternative path');
+          fileToLoad = altPath; // Update path for future use
+          console.log('✓ Success with alternative path');
           break;
+        }
+      }
+    }
+
+    // If module has files array, also try those as alternatives
+    if (!response.ok && module.files && Array.isArray(module.files)) {
+      console.log('Trying files array as alternatives...');
+      for (const file of module.files) {
+        if (file.path !== fileToLoad) {
+          const encodedAltPath = encodePath(file.path);
+          console.log('Trying file path:', encodedAltPath);
+          response = await fetch(encodedAltPath);
+          if (response.ok) {
+            fileToLoad = file.path;
+            console.log('✓ Success with file path:', file.name);
+            break;
+          }
         }
       }
     }
@@ -339,10 +501,10 @@ async function loadModule(moduleId, fileIndex = 0) {
     if (!response.ok && BASE_PATH !== '/') {
       console.log('Trying path variations for GitHub Pages...');
 
-      // Try 1: Without leading slash in module path
+      // Try 1: Without leading slash in file path
       const pathVariation1 =
         BASE_PATH +
-        module.path
+        fileToLoad
           .replace(/^\.\//, '')
           .split('/')
           .map((s) => (s ? encodeURIComponent(s) : s))
@@ -355,7 +517,7 @@ async function loadModule(moduleId, fileIndex = 0) {
         const pathVariation2 =
           BASE_PATH.replace(/\/$/, '') +
           '/../' +
-          module.path
+          fileToLoad
             .replace(/^\.\//, '')
             .split('/')
             .map((s) => (s ? encodeURIComponent(s) : s))
@@ -364,11 +526,11 @@ async function loadModule(moduleId, fileIndex = 0) {
         response = await fetch(pathVariation2);
       }
 
-      // Try 3: Just the module path (absolute from root)
+      // Try 3: Just the file path (absolute from root)
       if (!response.ok) {
         const pathVariation3 =
           '/' +
-          module.path
+          fileToLoad
             .replace(/^\.\//, '')
             .split('/')
             .map((s) => (s ? encodeURIComponent(s) : s))
@@ -385,7 +547,7 @@ async function loadModule(moduleId, fileIndex = 0) {
           BASE_PATH = newBasePath;
           const retryPath =
             BASE_PATH +
-            module.path
+            fileToLoad
               .replace(/^\.\//, '')
               .split('/')
               .map((s) => (s ? encodeURIComponent(s) : s))
@@ -398,7 +560,7 @@ async function loadModule(moduleId, fileIndex = 0) {
 
     // Final fallback: try without base path (for local development)
     if (!response.ok) {
-      const localPath = module.path.replace(/^\.\//, '');
+      const localPath = fileToLoad.replace(/^\.\//, '');
       const encodedLocalPath = localPath
         .split('/')
         .map((segment) => (segment ? encodeURIComponent(segment) : segment))
@@ -409,7 +571,7 @@ async function loadModule(moduleId, fileIndex = 0) {
 
     if (!response.ok) {
       console.error('Failed to fetch module:', {
-        path: module.path,
+        path: fileToLoad,
         encodedPath: encodedPath,
         status: response.status,
         statusText: response.statusText,
@@ -438,10 +600,7 @@ async function loadModule(moduleId, fileIndex = 0) {
       const src = img.getAttribute('src');
       if (src && !src.startsWith('http') && !src.startsWith('//')) {
         // Convert relative paths to absolute from module directory
-        const moduleDir = module.path.substring(
-          0,
-          module.path.lastIndexOf('/')
-        );
+        const moduleDir = fileToLoad.substring(0, fileToLoad.lastIndexOf('/'));
         // Build full path with base path
         const cleanModuleDir = moduleDir.replace(/^\.\//, '');
         const fullModuleDir =
@@ -465,8 +624,46 @@ async function loadModule(moduleId, fileIndex = 0) {
       }
     });
 
+    // Show module content
     homeContent.style.display = 'none';
     moduleContent.style.display = 'block';
+
+    // CRITICAL: Ensure tabs are visible AFTER content is shown
+    // This must happen after moduleContent is displayed
+    if (
+      module.files &&
+      Array.isArray(module.files) &&
+      module.files.length > 1
+    ) {
+      if (moduleFileTabs) {
+        // Force visibility with multiple methods
+        moduleFileTabs.style.setProperty('display', 'flex', 'important');
+        moduleFileTabs.style.setProperty('visibility', 'visible', 'important');
+        moduleFileTabs.style.setProperty('opacity', '1', 'important');
+        moduleFileTabs.classList.add('show-tabs');
+
+        // Double-check tabs are rendered
+        if (moduleFileTabs.children.length === 0) {
+          console.warn('⚠ Tabs container is empty, re-rendering...');
+          renderModuleFileTabs(module, fileIndex);
+        }
+
+        console.log(
+          '✓ Tabs confirmed visible after content load. Count:',
+          moduleFileTabs.children.length
+        );
+        console.log(
+          '✓ Tabs container computed style:',
+          window.getComputedStyle(moduleFileTabs).display
+        );
+      }
+    } else {
+      // Hide tabs if no multiple files
+      if (moduleFileTabs) {
+        moduleFileTabs.style.display = 'none';
+        moduleFileTabs.classList.remove('show-tabs');
+      }
+    }
 
     // Handle hash navigation after content is loaded
     setTimeout(() => {

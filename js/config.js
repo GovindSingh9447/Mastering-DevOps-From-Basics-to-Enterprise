@@ -14,6 +14,18 @@ const modules = [
     path: './Module 02: Linux & Shell Scripting/README.md',
     category: 'Foundation',
     order: 2,
+    files: [
+      {
+        name: 'Linux Basics',
+        path: './Module 02: Linux & Shell Scripting/README.md',
+        icon: '🐧',
+      },
+      {
+        name: 'Shell Scripting',
+        path: './Module 02: Linux & Shell Scripting/shell-script.md',
+        icon: '💻',
+      },
+    ],
   },
   {
     id: 'module-03',
