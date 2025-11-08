@@ -3,6 +3,47 @@ document.addEventListener('DOMContentLoaded', () => {
   initializeApp();
 });
 
+// Get base path for GitHub Pages (repository name in URL)
+function getBasePath() {
+  const pathname = window.location.pathname;
+  const hostname = window.location.hostname;
+
+  // Check if we're on GitHub Pages (github.io domain)
+  const isGitHubPages = hostname.includes('github.io');
+
+  if (isGitHubPages) {
+    // Extract repository name from pathname
+    // Pathname format: /repo-name/ or /repo-name/index.html or just /repo-name
+    const pathParts = pathname
+      .split('/')
+      .filter((p) => p && p !== 'index.html');
+
+    // If there's at least one path part, it's likely the repo name
+    if (pathParts.length > 0) {
+      const repoName = pathParts[0];
+      // Return base path with trailing slash
+      return '/' + repoName + '/';
+    }
+
+    // Fallback: try to extract from pathname directly
+    const match = pathname.match(/^\/([^/]+)/);
+    if (match && match[1] && match[1] !== 'index.html') {
+      return '/' + match[1] + '/';
+    }
+  }
+
+  // For local development or custom domain, return root
+  return '/';
+}
+
+// Store base path globally
+const BASE_PATH = getBasePath();
+
+// Debug: log base path (helpful for troubleshooting)
+if (window.location.hostname.includes('github.io')) {
+  console.log('GitHub Pages detected. Base path:', BASE_PATH);
+}
+
 function initializeApp() {
   renderNavigation();
   renderModulesGrid();
@@ -179,18 +220,24 @@ async function loadModule(moduleId) {
     // Fetch and render module content
     // Properly encode path segments to handle spaces and special characters
     function encodePath(path) {
-      // Split path and encode each segment except relative navigation (../)
-      return path
+      // Remove leading ./ if present
+      let cleanPath = path.replace(/^\.\//, '');
+
+      // Encode the module path segments
+      const encodedModulePath = cleanPath
         .split('/')
-        .map((segment, index, array) => {
-          // Keep relative navigation as-is
-          if (segment === '..' || segment === '.') {
-            return segment;
-          }
-          // Encode the segment
+        .map((segment) => {
+          // Skip empty segments
+          if (!segment) return segment;
+          // Encode the segment to handle spaces and special characters
           return encodeURIComponent(segment);
         })
         .join('/');
+
+      // Build full path with base path (don't encode base path, it's already a URL path)
+      return BASE_PATH === '/'
+        ? encodedModulePath
+        : BASE_PATH + encodedModulePath;
     }
 
     const encodedPath = encodePath(module.path);
@@ -206,6 +253,16 @@ async function loadModule(moduleId) {
           break;
         }
       }
+    }
+
+    // If still failing, try without base path (for local development)
+    if (!response.ok && BASE_PATH !== '/') {
+      const localPath = module.path.replace(/^\.\//, '');
+      const encodedLocalPath = localPath
+        .split('/')
+        .map((segment) => (segment ? encodeURIComponent(segment) : segment))
+        .join('/');
+      response = await fetch(encodedLocalPath);
     }
 
     if (!response.ok) {
@@ -243,7 +300,11 @@ async function loadModule(moduleId) {
           0,
           module.path.lastIndexOf('/')
         );
-        img.src = `${moduleDir}/${src}`;
+        // Build full path with base path
+        const cleanModuleDir = moduleDir.replace(/^\.\//, '');
+        const fullModuleDir =
+          BASE_PATH === '/' ? cleanModuleDir : BASE_PATH + cleanModuleDir;
+        img.src = `${fullModuleDir}/${src}`;
       }
     });
 
