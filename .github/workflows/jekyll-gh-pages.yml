@@ -1,6 +1,4 @@
-# Sample workflow for building and deploying a Jekyll site to GitHub Pages
-# .github/workflows/jekyll-deploy.yml
-name: Deploy Jekyll site to GitHub Pages
+name: Deploy Jekyll site (docs folder) to GitHub Pages
 
 on:
   push:
@@ -17,9 +15,6 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # --------------------------
-  # Build Jekyll Site
-  # --------------------------
   build:
     runs-on: ubuntu-latest
 
@@ -36,13 +31,7 @@ jobs:
       - name: Disable problematic plugin (jekyll-github-metadata)
         run: |
           echo "Disabling jekyll-github-metadata plugin..."
-          if [ -f "_config.yml" ]; then
-            grep -q "jekyll-github-metadata" _config.yml && \
-            sed -i '/jekyll-github-metadata/s/^/# /' _config.yml || true
-            if ! grep -q "^github:" _config.yml; then
-              echo -e "\ngithub:\n  is_project_page: false" >> _config.yml
-            fi
-          elif [ -f "docs/_config.yml" ]; then
+          if [ -f "docs/_config.yml" ]; then
             grep -q "jekyll-github-metadata" docs/_config.yml && \
             sed -i '/jekyll-github-metadata/s/^/# /' docs/_config.yml || true
             if ! grep -q "^github:" docs/_config.yml; then
@@ -51,23 +40,27 @@ jobs:
           fi
 
       - name: Install Dependencies
+        working-directory: docs
         run: |
           gem install bundler
-          bundle install || true  # Fail-safe for missing optional gems
+          bundle install || true
 
-      - name: Build with Jekyll
+      - name: Build with Jekyll (docs/)
+        working-directory: docs
         run: |
           echo "Building Jekyll site..."
-          bundle exec jekyll build -d _site || echo "⚠️ Jekyll build completed with warnings"
+          bundle exec jekyll build -s . -d ../_site || echo "⚠️ Jekyll build completed with warnings"
+
+      - name: Verify build output
+        run: |
+          echo "Listing built files..."
+          ls -la _site || (echo "❌ _site directory not found"; exit 1)
 
       - name: Upload Build Artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: _site
 
-  # --------------------------
-  # Deploy to GitHub Pages
-  # --------------------------
   deploy:
     environment:
       name: github-pages
