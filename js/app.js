@@ -7,41 +7,61 @@ document.addEventListener('DOMContentLoaded', () => {
 function getBasePath() {
   const pathname = window.location.pathname;
   const hostname = window.location.hostname;
+  const href = window.location.href;
 
   // Check if we're on GitHub Pages (github.io domain)
   const isGitHubPages = hostname.includes('github.io');
 
   if (isGitHubPages) {
-    // Extract repository name from pathname
-    // Pathname format: /repo-name/ or /repo-name/index.html or just /repo-name
-    const pathParts = pathname
-      .split('/')
-      .filter((p) => p && p !== 'index.html');
+    // Try multiple methods to detect the base path
 
-    // If there's at least one path part, it's likely the repo name
-    if (pathParts.length > 0) {
+    // Method 1: Extract from pathname (most reliable)
+    // For: https://username.github.io/repo-name/ -> /repo-name/
+    const pathParts = pathname.split('/').filter((p) => p);
+    if (pathParts.length > 0 && pathParts[0] !== 'index.html') {
       const repoName = pathParts[0];
-      // Return base path with trailing slash
+      console.log('Detected repo name from pathname:', repoName);
       return '/' + repoName + '/';
     }
 
-    // Fallback: try to extract from pathname directly
-    const match = pathname.match(/^\/([^/]+)/);
-    if (match && match[1] && match[1] !== 'index.html') {
-      return '/' + match[1] + '/';
+    // Method 2: Extract from full URL
+    // For: https://username.github.io/repo-name/ -> /repo-name/
+    const urlMatch = href.match(/github\.io\/([^/]+)/);
+    if (urlMatch && urlMatch[1]) {
+      console.log('Detected repo name from URL:', urlMatch[1]);
+      return '/' + urlMatch[1] + '/';
+    }
+
+    // Method 3: Try to get from script src (fallback)
+    const scripts = document.getElementsByTagName('script');
+    for (let script of scripts) {
+      if (script.src && script.src.includes('github.io')) {
+        const scriptMatch = script.src.match(/github\.io\/([^/]+)/);
+        if (scriptMatch && scriptMatch[1]) {
+          console.log('Detected repo name from script src:', scriptMatch[1]);
+          return '/' + scriptMatch[1] + '/';
+        }
+      }
     }
   }
 
   // For local development or custom domain, return root
+  console.log('Using root path (local or custom domain)');
   return '/';
 }
 
-// Store base path globally
-const BASE_PATH = getBasePath();
+// Store base path globally - calculate it after DOM is ready
+let BASE_PATH = '/';
 
-// Debug: log base path (helpful for troubleshooting)
-if (window.location.hostname.includes('github.io')) {
-  console.log('GitHub Pages detected. Base path:', BASE_PATH);
+// Initialize base path after page loads
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    BASE_PATH = getBasePath();
+    console.log('Base path initialized:', BASE_PATH);
+  });
+} else {
+  BASE_PATH = getBasePath();
+  console.log('Base path initialized (immediate):', BASE_PATH);
 }
 
 function initializeApp() {
@@ -137,26 +157,58 @@ function setupEventListeners() {
   // Mobile menu toggle
   const mobileMenuToggle = document.getElementById('mobileMenuToggle');
   const sidebar = document.getElementById('sidebar');
+  const mobileOverlay = document.getElementById('mobileOverlay');
+
+  function toggleSidebar() {
+    sidebar.classList.toggle('open');
+    if (mobileOverlay) {
+      mobileOverlay.classList.toggle(
+        'active',
+        sidebar.classList.contains('open')
+      );
+    }
+  }
 
   if (mobileMenuToggle) {
-    mobileMenuToggle.addEventListener('click', () => {
-      sidebar.classList.toggle('open');
+    mobileMenuToggle.addEventListener('click', toggleSidebar);
+  }
+
+  if (mobileOverlay) {
+    mobileOverlay.addEventListener('click', () => {
+      if (sidebar.classList.contains('open')) {
+        toggleSidebar();
+      }
     });
   }
 
-  // Close sidebar when clicking outside on mobile
-  document.addEventListener('click', (e) => {
-    if (window.innerWidth <= 768) {
-      if (!sidebar.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
-        sidebar.classList.remove('open');
-      }
+  // Close sidebar on escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && sidebar.classList.contains('open')) {
+      toggleSidebar();
     }
   });
+
+  // Prevent body scroll when sidebar is open on mobile
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.attributeName === 'class') {
+        if (sidebar.classList.contains('open')) {
+          document.body.style.overflow = 'hidden';
+        } else {
+          document.body.style.overflow = '';
+        }
+      }
+    });
+  });
+
+  observer.observe(sidebar, { attributes: true });
 
   // Handle window resize
   window.addEventListener('resize', () => {
     if (window.innerWidth > 768) {
-      sidebar.classList.remove('open');
+      if (sidebar.classList.contains('open')) {
+        toggleSidebar();
+      }
     }
   });
 }
@@ -166,10 +218,11 @@ function loadInitialContent() {
   loadModule('home');
 }
 
-async function loadModule(moduleId) {
+async function loadModule(moduleId, fileIndex = 0) {
   const contentBody = document.getElementById('contentBody');
   const homeContent = document.getElementById('homeContent');
   const moduleContent = document.getElementById('moduleContent');
+  const moduleFileTabs = document.getElementById('moduleFileTabs');
   const loadingSpinner = document.getElementById('loadingSpinner');
   const breadcrumb = document.getElementById('breadcrumb');
 
@@ -180,13 +233,19 @@ async function loadModule(moduleId) {
 
   // Close mobile menu
   const sidebar = document.getElementById('sidebar');
-  if (window.innerWidth <= 768) {
+  const mobileOverlay = document.getElementById('mobileOverlay');
+  if (window.innerWidth <= 768 && sidebar) {
     sidebar.classList.remove('open');
+    if (mobileOverlay) {
+      mobileOverlay.classList.remove('active');
+    }
+    document.body.style.overflow = '';
   }
 
   if (moduleId === 'home') {
     homeContent.style.display = 'block';
     moduleContent.style.display = 'none';
+    moduleFileTabs.style.display = 'none';
     breadcrumb.innerHTML =
       '<a href="#" onclick="loadModule(\'home\')">Home</a>';
     return;
@@ -196,6 +255,22 @@ async function loadModule(moduleId) {
   if (!module) {
     console.error('Module not found:', moduleId);
     return;
+  }
+
+  // Handle modules with multiple files
+  let fileToLoad = module.path;
+  if (module.files && module.files.length > 0) {
+    // Show file tabs
+    renderModuleFileTabs(module, fileIndex);
+    moduleFileTabs.style.display = 'flex';
+    
+    // Load the selected file
+    if (module.files[fileIndex]) {
+      fileToLoad = module.files[fileIndex].path;
+    }
+  } else {
+    // Hide file tabs for modules without multiple files
+    moduleFileTabs.style.display = 'none';
   }
 
   // Show loading spinner
@@ -240,28 +315,95 @@ async function loadModule(moduleId) {
         : BASE_PATH + encodedModulePath;
     }
 
-    const encodedPath = encodePath(module.path);
+    const encodedPath = encodePath(fileToLoad);
     let response = await fetch(encodedPath);
+
+    console.log('Attempting to fetch:', encodedPath);
 
     // Try alternative paths if main path fails
     if (!response.ok && module.altPaths) {
+      console.log('Trying alternative paths...');
       for (const altPath of module.altPaths) {
         const encodedAltPath = encodePath(altPath);
+        console.log('Trying alternative:', encodedAltPath);
         response = await fetch(encodedAltPath);
         if (response.ok) {
           module.path = altPath; // Update path for future use
+          console.log('Success with alternative path');
           break;
         }
       }
     }
 
-    // If still failing, try without base path (for local development)
+    // If still failing on GitHub Pages, try different base path variations
     if (!response.ok && BASE_PATH !== '/') {
+      console.log('Trying path variations for GitHub Pages...');
+
+      // Try 1: Without leading slash in module path
+      const pathVariation1 =
+        BASE_PATH +
+        module.path
+          .replace(/^\.\//, '')
+          .split('/')
+          .map((s) => (s ? encodeURIComponent(s) : s))
+          .join('/');
+      console.log('Trying variation 1:', pathVariation1);
+      response = await fetch(pathVariation1);
+
+      // Try 2: With ../ relative path
+      if (!response.ok) {
+        const pathVariation2 =
+          BASE_PATH.replace(/\/$/, '') +
+          '/../' +
+          module.path
+            .replace(/^\.\//, '')
+            .split('/')
+            .map((s) => (s ? encodeURIComponent(s) : s))
+            .join('/');
+        console.log('Trying variation 2:', pathVariation2);
+        response = await fetch(pathVariation2);
+      }
+
+      // Try 3: Just the module path (absolute from root)
+      if (!response.ok) {
+        const pathVariation3 =
+          '/' +
+          module.path
+            .replace(/^\.\//, '')
+            .split('/')
+            .map((s) => (s ? encodeURIComponent(s) : s))
+            .join('/');
+        console.log('Trying variation 3:', pathVariation3);
+        response = await fetch(pathVariation3);
+      }
+
+      // Try 4: Re-detect BASE_PATH and try again (in case it wasn't set correctly)
+      if (!response.ok) {
+        const newBasePath = getBasePath();
+        if (newBasePath !== BASE_PATH) {
+          console.log('Base path changed, retrying with:', newBasePath);
+          BASE_PATH = newBasePath;
+          const retryPath =
+            BASE_PATH +
+            module.path
+              .replace(/^\.\//, '')
+              .split('/')
+              .map((s) => (s ? encodeURIComponent(s) : s))
+              .join('/');
+          console.log('Retrying with new base path:', retryPath);
+          response = await fetch(retryPath);
+        }
+      }
+    }
+
+    // Final fallback: try without base path (for local development)
+    if (!response.ok) {
       const localPath = module.path.replace(/^\.\//, '');
       const encodedLocalPath = localPath
         .split('/')
         .map((segment) => (segment ? encodeURIComponent(segment) : segment))
         .join('/');
+      console.log('Trying local path:', encodedLocalPath);
       response = await fetch(encodedLocalPath);
     }
 

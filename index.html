@@ -4,7 +4,15 @@
     <meta charset="UTF-8" />
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1.0"
+      content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes"
+    />
+    <meta
+      name="theme-color"
+      content="#2563eb"
+    />
+    <meta
+      name="mobile-web-app-capable"
+      content="yes"
     />
     <title>Mastering DevOps: From Basics to Enterprise</title>
     <meta
@@ -25,6 +33,12 @@
     />
   </head>
   <body>
+    <!-- Mobile Menu Overlay -->
+    <div
+      class="mobile-overlay"
+      id="mobileOverlay"
+    ></div>
+
     <!-- Mobile Menu Toggle -->
     <button
       class="mobile-menu-toggle"
@@ -182,6 +196,9 @@ cd "Module 01: Introduction to DevOps & DevSecOps"
 # Start learning!</code></pre>
           </div>
         </div>
+
+        <!-- Module file tabs (for modules with multiple files) -->
+        <div id="moduleFileTabs" class="module-file-tabs" style="display: none;"></div>
 
         <!-- Module content will be rendered here -->
         <div

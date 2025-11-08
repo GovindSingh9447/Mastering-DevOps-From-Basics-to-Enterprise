@@ -56,10 +56,17 @@ body {
   border-radius: 0.5rem;
   cursor: pointer;
   box-shadow: var(--shadow-lg);
+  transition: all 0.3s ease;
+  font-size: 1.1rem;
 }
 
 .mobile-menu-toggle:hover {
   background: var(--secondary-color);
+  transform: scale(1.05);
+}
+
+.mobile-menu-toggle:active {
+  transform: scale(0.95);
 }
 
 /* Sidebar */
@@ -72,8 +79,28 @@ body {
   background: var(--sidebar-bg);
   border-right: 1px solid var(--border-color);
   overflow-y: auto;
+  overflow-x: hidden;
   transition: transform 0.3s ease;
   z-index: 1000;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+}
+
+/* Sidebar scrollbar styling */
+.sidebar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
 }
 
 .sidebar-header {
@@ -514,17 +541,56 @@ body {
 }
 
 /* Responsive Design */
+
+/* Large tablets and small desktops */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 240px;
+  }
+
+  .main-content {
+    margin-left: 240px;
+  }
+
+  .content-body {
+    padding: 1.5rem;
+    max-width: 100%;
+  }
+}
+
+/* Tablets */
 @media (max-width: 768px) {
   .mobile-menu-toggle {
     display: block;
   }
 
   .sidebar {
+    width: 280px;
     transform: translateX(-100%);
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
   }
 
   .sidebar.open {
     transform: translateX(0);
+  }
+
+  /* Mobile overlay */
+  .mobile-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .mobile-overlay.active {
+    display: block;
+    opacity: 1;
   }
 
   .main-content {
@@ -533,30 +599,264 @@ body {
 
   .content-header {
     padding: 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
   }
 
   .content-body {
     padding: 1rem;
   }
 
+  .hero-section {
+    padding: 2rem 0;
+  }
+
   .hero-section h1 {
     font-size: 1.75rem;
+    line-height: 1.3;
   }
 
   .lead {
     font-size: 1rem;
+    padding: 0 0.5rem;
+  }
+
+  .badges {
+    gap: 0.5rem;
+  }
+
+  .badge {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.8rem;
   }
 
   .modules-list {
     grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .module-card {
+    padding: 1.25rem;
+  }
+
+  .markdown-content {
+    font-size: 0.95rem;
   }
 
   .markdown-content h1 {
     font-size: 2rem;
+    margin: 1.5rem 0 0.75rem;
   }
 
   .markdown-content h2 {
     font-size: 1.5rem;
+    margin: 1.5rem 0 0.75rem;
+  }
+
+  .markdown-content h3 {
+    font-size: 1.25rem;
+  }
+
+  .markdown-content pre {
+    padding: 1rem;
+    overflow-x: auto;
+    font-size: 0.8rem;
+  }
+
+  .markdown-content table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .breadcrumb {
+    font-size: 0.8rem;
+    flex-wrap: wrap;
+  }
+}
+
+/* Mobile devices */
+@media (max-width: 480px) {
+  .mobile-menu-toggle {
+    top: 0.75rem;
+    left: 0.75rem;
+    padding: 0.6rem;
+    font-size: 1rem;
+  }
+
+  .sidebar {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .sidebar-header {
+    padding: 1rem;
+  }
+
+  .logo {
+    font-size: 1.25rem;
+  }
+
+  .content-header {
+    padding: 0.75rem;
+    position: relative;
+  }
+
+  .content-body {
+    padding: 0.75rem;
+  }
+
+  .hero-section {
+    padding: 1.5rem 0;
+    margin-bottom: 2rem;
+  }
+
+  .hero-section h1 {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .lead {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .badges {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .badge {
+    width: auto;
+    text-align: center;
+  }
+
+  .intro-section,
+  .features-section,
+  .quick-start-section,
+  .modules-grid {
+    margin-bottom: 2rem;
+  }
+
+  .intro-section h2,
+  .features-section h2,
+  .quick-start-section h2,
+  .modules-grid h2 {
+    font-size: 1.5rem;
+  }
+
+  .features-list li {
+    padding: 0.75rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .module-card {
+    padding: 1rem;
+  }
+
+  .module-card h3 {
+    font-size: 1.1rem;
+  }
+
+  .markdown-content {
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+
+  .markdown-content h1 {
+    font-size: 1.75rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .markdown-content h2 {
+    font-size: 1.35rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .markdown-content h3 {
+    font-size: 1.15rem;
+  }
+
+  .markdown-content h4 {
+    font-size: 1.05rem;
+  }
+
+  .markdown-content pre {
+    padding: 0.75rem;
+    font-size: 0.75rem;
+    border-radius: 0.25rem;
+  }
+
+  .markdown-content code {
+    font-size: 0.85em;
+    padding: 0.15rem 0.3rem;
+  }
+
+  .markdown-content blockquote {
+    padding-left: 0.75rem;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+  }
+
+  .markdown-content table {
+    font-size: 0.85rem;
+  }
+
+  .markdown-content table th,
+  .markdown-content table td {
+    padding: 0.5rem;
+  }
+
+  .content-footer {
+    padding: 1.5rem 1rem;
+    font-size: 0.8rem;
+  }
+
+  .btn-icon {
+    padding: 0.4rem;
+    font-size: 0.9rem;
+  }
+
+  .breadcrumb {
+    font-size: 0.75rem;
+    width: 100%;
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 320px) {
+  .hero-section h1 {
+    font-size: 1.25rem;
+  }
+
+  .lead {
+    font-size: 0.85rem;
+  }
+
+  .markdown-content h1 {
+    font-size: 1.5rem;
+  }
+
+  .markdown-content h2 {
+    font-size: 1.25rem;
+  }
+
+  .content-body {
+    padding: 0.5rem;
+  }
+}
+
+/* Landscape orientation for mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+  .sidebar {
+    width: 250px;
+  }
+
+  .hero-section {
+    padding: 1.5rem 0;
   }
 }
 
