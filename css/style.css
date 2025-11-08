@@ -799,9 +799,11 @@ body {
 .content-footer a {
   color: var(--primary-color);
   text-decoration: none;
+  transition: color 0.2s ease;
 }
 
 .content-footer a:hover {
+  color: var(--secondary-color);
   text-decoration: underline;
 }
 
