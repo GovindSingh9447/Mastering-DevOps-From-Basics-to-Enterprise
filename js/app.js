@@ -441,14 +441,21 @@ async function loadModule(moduleId, fileIndex = 0) {
         })
         .join('/');
 
-      // Build full path with base path (don't encode base path, it's already a URL path)
-      // Ensure BASE_PATH ends with / and encodedModulePath doesn't start with /
-      const base = BASE_PATH.endsWith('/') ? BASE_PATH : BASE_PATH + '/';
-      const module = encodedModulePath.startsWith('/')
-        ? encodedModulePath.substring(1)
-        : encodedModulePath;
-
-      return BASE_PATH === '/' ? encodedModulePath : base + module;
+      // Build full path with base path
+      // For GitHub Pages, BASE_PATH will be like '/repo-name/'
+      // For local, BASE_PATH will be '/'
+      if (BASE_PATH === '/') {
+        // Local development - just use the encoded path
+        return encodedModulePath;
+      } else {
+        // GitHub Pages - prepend BASE_PATH
+        // Ensure BASE_PATH ends with / and encodedModulePath doesn't start with /
+        const base = BASE_PATH.endsWith('/') ? BASE_PATH : BASE_PATH + '/';
+        const modulePath = encodedModulePath.startsWith('/')
+          ? encodedModulePath.substring(1)
+          : encodedModulePath;
+        return base + modulePath;
+      }
     }
 
     // Re-check BASE_PATH before encoding (in case it wasn't set correctly)
@@ -462,6 +469,7 @@ async function loadModule(moduleId, fileIndex = 0) {
     console.log('Attempting to fetch:', encodedPath);
     console.log('Base path:', BASE_PATH);
     console.log('Original path:', fileToLoad);
+    console.log('Full URL would be:', window.location.origin + encodedPath);
 
     let response = await fetch(encodedPath);
 

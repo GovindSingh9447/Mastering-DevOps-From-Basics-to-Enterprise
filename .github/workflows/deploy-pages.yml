@@ -1,0 +1,70 @@
+name: Deploy to GitHub Pages
+
+on:
+    push:
+        branches: [main, master]
+    workflow_dispatch:
+
+permissions:
+    contents: read
+    pages: write
+    id-token: write
+
+concurrency:
+    group: "pages"
+    cancel-in-progress: true
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: List files
+              run: |
+                  echo "Repository structure:"
+                  ls -la
+                  echo ""
+                  echo "Root files:"
+                  ls -la *.html *.js *.css 2>/dev/null || echo "No root HTML/CSS/JS files"
+                  echo ""
+                  echo "Module directories:"
+                  ls -d "Module"* 2>/dev/null | head -5 || echo "No Module directories found"
+
+            - name: Verify required files
+              run: |
+                  if [ ! -f "index.html" ]; then
+                    echo "Error: index.html not found!"
+                    exit 1
+                  fi
+                  if [ ! -f "js/app.js" ]; then
+                    echo "Error: js/app.js not found!"
+                    exit 1
+                  fi
+                  if [ ! -f "css/style.css" ]; then
+                    echo "Error: css/style.css not found!"
+                    exit 1
+                  fi
+                  if [ ! -f "js/config.js" ]; then
+                    echo "Error: js/config.js not found!"
+                    exit 1
+                  fi
+                  echo "All required files found!"
+
+            - name: Upload artifact for GitHub Pages
+              uses: actions/upload-pages-artifact@v3
+              with:
+                  path: .
+
+    deploy:
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
+        runs-on: ubuntu-latest
+        needs: build
+        steps:
+            - name: Deploy to GitHub Pages
+              id: deployment
+              uses: actions/deploy-pages@v4
