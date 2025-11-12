@@ -891,7 +891,13 @@ body {
 
   .content-header {
     padding: 1rem;
+    padding-top: 3.75rem; /* Space for mobile menu toggle button on tablets */
     flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .content-actions {
+    margin-left: auto;
     gap: 0.5rem;
   }
 
@@ -1009,6 +1015,7 @@ body {
     left: 0.75rem;
     padding: 0.6rem;
     font-size: 1rem;
+    z-index: 1002;
   }
 
   .sidebar {
@@ -1026,7 +1033,22 @@ body {
 
   .content-header {
     padding: 0.75rem;
+    padding-top: 3.5rem; /* Space for mobile menu toggle button */
     position: relative;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .content-actions {
+    margin-left: auto;
+    gap: 0.25rem;
+    order: 1;
+  }
+
+  .breadcrumb {
+    width: 100%;
+    order: 2;
+    margin-top: 0.5rem;
   }
 
   .content-body {

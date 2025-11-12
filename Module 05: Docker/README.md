@@ -29,35 +29,6 @@ Everything you need to learn and master **Docker** — from basics to real-world
     - [Project 2: Nodejs App](#project-2-nodejs-app)
 13. [Conclusion](#13-conclusion)
 
-14. [Introduction to Docker](#1-introduction-to-docker)
-15. [Why Use Docker?](#2-why-use-docker)
-16. [Docker vs Virtual Machines](#3-docker-vs-virtual-machines)
-17. [Docker Architecture](#4-docker-architecture)
-18. [Docker Images](#5-docker-images)
-19. [Docker Containers](#6-docker-containers)
-20. [Dockerfile – Writing Custom Images](#7-dockerfile--writing-custom-images)
-
-    - [Important Dockerfile Keywords](#important-dockerfile-keywords)
-    - [Sample Dockerfile](#sample-dockerfile)
-    - [Writing Optimized Dockerfiles](#writing-optimized-dockerfiles)
-    - [ADD vs COPY & CMD vs ENTRYPOINT](#add-vs-copy--cmd-vs-entrypoint)
-    - [Multi-Stage Dockerfiles](#multi-stage-dockerfiles)
-
-21. [Docker Volumes (Persistent Storage)](#8-docker-volumes-persistent-storage)
-22. [Docker Networking](#9-docker-networking)
-23. [Important Docker Commands](#10-important-docker-commands)
-24. [Building & Pushing Docker Images](#11-building--pushing-docker-images)
-
-    - [Pushing to DockerHub](#pushing-to-dockerhub)
-    - [Pushing to AWS ECR](#pushing-to-aws-ecr)
-
-25. [Real-World Docker Projects](#12-real-world-docker-projects)
-
-    - [Project 1: Python Flask App](#project-1-python-flask-app)
-    - [Project 2: Node.js App](#project-2-nodejs-app)
-
-26. [Conclusion](#13-conclusion)
-
 ---
 
 ## 1. Introduction to Docker
@@ -445,15 +416,12 @@ docker run -d -p 3000:3000 node-docker
 
 ---
 
-💡 **Challenge**: Use **Docker Compose** to run Flask + Node + Database together.
-
----
-
 ## 13. Conclusion
 
 - Docker makes apps **portable, consistent, scalable**.
 - Learn: **images, containers, networking, volumes, Dockerfiles**.
 - Practice with **projects + pushing images** → ready for DevOps & real-world.
+- For **multi-container applications**, see the **Docker Compose** documentation.
 
 ---
 

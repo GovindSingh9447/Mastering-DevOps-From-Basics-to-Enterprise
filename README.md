@@ -19,6 +19,7 @@
 This comprehensive curriculum takes you from DevOps basics to enterprise-level implementation. Perfect for developers, system administrators, and anyone looking to master modern DevOps practices.
 
 ### 🔍 **Keywords & Technologies Covered**
+
 `DevOps` `Docker` `Kubernetes` `CI/CD` `Jenkins` `GitHub Actions` `GitLab CI` `Terraform` `CloudFormation` `Pulumi` `Ansible` `AWS` `Azure` `GCP` `Linux` `Shell Scripting` `Git` `Maven` `Gradle` `NPM` `SonarQube` `Security Scanning` `DevSecOps` `Nexus` `Artifact Management` `Container Orchestration` `Infrastructure as Code` `Monitoring` `Prometheus` `Grafana` `Helm` `YAML` `Docker Compose` `Microservices` `Cloud Native` `Production Ready` `Best Practices` `Enterprise` `Learning Path` `Tutorial` `Guide` `Free Course` `2025`
 
 ## 📋 Table of Contents
@@ -116,6 +117,38 @@ cd "Module 01: Introduction to DevOps & DevSecOps"
 
 # Start learning!
 ```
+
+## 🌐 Documentation Website
+
+We've created a beautiful, interactive documentation website for easy navigation!
+
+### **View Online** (GitHub Pages)
+
+Once deployed, visit: `https://yourusername.github.io/Mastering-DevOps-From-Basics-to-Enterprise/`
+
+### **Run Locally**
+
+The website is served from the repository root.
+
+```bash
+# From repository root directory
+./start-server.sh
+
+# Or manually with Python
+python3 -m http.server 8000
+```
+
+Then open `http://localhost:8000` in your browser.
+
+**Features:**
+
+- 📱 Responsive design (mobile-friendly)
+- 🌙 Dark mode support
+- 🔍 Easy module navigation
+- 📖 All content in one place
+- ⚡ Fast and lightweight
+
+See [docs/README.md](./docs/README.md) for more details.
 
 ## 🤝 Contributing
 

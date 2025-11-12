@@ -99,10 +99,50 @@ function initializeApp() {
   // Handle hash navigation on page load
   window.addEventListener('hashchange', handleHashNavigation);
 
-  // Check for hash on initial load
-  if (window.location.hash) {
-    setTimeout(handleHashNavigation, 100);
-  }
+  // Handle browser back/forward buttons
+  window.addEventListener('popstate', (e) => {
+    const url = new URL(window.location.href);
+    const hash = url.hash;
+
+    // If no hash or hash is empty, load home page
+    if (!hash || hash === '') {
+      loadModule('home', 0, false); // false = don't update history
+      return;
+    }
+
+    // Parse module ID from hash if it's in format #module-XX or #module-XX-file-Y
+    const hashMatch = hash.match(/^#module-(\d+)(?:-file-(\d+))?$/);
+    if (hashMatch) {
+      const moduleNum = hashMatch[1];
+      const module = modules.find((m) => m.order === parseInt(moduleNum, 10));
+      if (module) {
+        const fileIdx = hashMatch[2] ? parseInt(hashMatch[2], 10) : 0;
+        loadModule(module.id, fileIdx, false); // false = don't update history
+        return;
+      }
+    }
+
+    // If hash doesn't match module format, it might be a section hash
+    // In that case, we need to determine which module we're in
+    // For now, check if there's a module in the state
+    if (e.state && e.state.moduleId) {
+      loadModule(e.state.moduleId, e.state.fileIndex || 0, false);
+      return;
+    }
+
+    // Fallback: try to load by module ID from query params (if exists)
+    const moduleId = url.searchParams.get('module');
+    if (moduleId && moduleId !== 'home') {
+      const fileIndex = parseInt(url.searchParams.get('file') || '0', 10);
+      loadModule(moduleId, fileIndex, false); // false = don't update history
+    } else {
+      // Default to home if we can't determine the module
+      loadModule('home', 0, false); // false = don't update history
+    }
+  });
+
+  // Initial content loading is handled by loadInitialContent()
+  // which checks the URL and loads the appropriate module
 }
 
 function renderNavigation() {
@@ -305,11 +345,44 @@ function setupEventListeners() {
 }
 
 function loadInitialContent() {
+  // Check URL first to see if we should load a specific module
+  const url = new URL(window.location.href);
+  const moduleParam = url.searchParams.get('module');
+  const hash = url.hash;
+  const hashMatch = hash.match(/^#module-(\d+)(?:-file-(\d+))?$/);
+
+  if (hashMatch) {
+    // Load module from hash
+    const moduleNum = hashMatch[1];
+    const module = modules.find((m) => m.order === parseInt(moduleNum, 10));
+    if (module) {
+      const fileIdx = hashMatch[2] ? parseInt(hashMatch[2], 10) : 0;
+      loadModule(module.id, fileIdx, false); // false = don't update history on initial load
+      return;
+    }
+  }
+
+  if (moduleParam) {
+    const fileIndex = parseInt(url.searchParams.get('file') || '0', 10);
+    loadModule(moduleParam, fileIndex, false); // false = don't update history on initial load
+    return;
+  }
+
   // Load home content by default
-  loadModule('home');
+  // If there's no hash, replace the current history entry with home
+  // This ensures that clicking back from home doesn't navigate away
+  if (!hash || hash === '') {
+    // Replace current history entry with home page state
+    window.history.replaceState(
+      { moduleId: 'home', fileIndex: 0 },
+      '',
+      window.location.pathname + window.location.search
+    );
+  }
+  loadModule('home', 0, false); // false = don't update history on initial load
 }
 
-async function loadModule(moduleId, fileIndex = 0) {
+async function loadModule(moduleId, fileIndex = 0, updateHistory = true) {
   const contentBody = document.getElementById('contentBody');
   const homeContent = document.getElementById('homeContent');
   const moduleContent = document.getElementById('moduleContent');
@@ -339,6 +412,13 @@ async function loadModule(moduleId, fileIndex = 0) {
     moduleFileTabs.style.display = 'none';
     breadcrumb.innerHTML =
       '<a href="#" onclick="loadModule(\'home\')">Home</a>';
+
+    // Update URL history if requested
+    if (updateHistory) {
+      const newUrl = window.location.pathname + window.location.search;
+      window.history.pushState({ moduleId: 'home', fileIndex: 0 }, '', newUrl);
+    }
+
     return;
   }
 
@@ -673,12 +753,37 @@ async function loadModule(moduleId, fileIndex = 0) {
       }
     }
 
+    // Update URL history if requested
+    if (updateHistory) {
+      // Create a clean URL hash like #module-01 or #module-02-file-1
+      const moduleOrder = module.order.toString().padStart(2, '0');
+      let newHash = `#module-${moduleOrder}`;
+
+      // Add file index if module has multiple files and fileIndex > 0
+      if (
+        module.files &&
+        Array.isArray(module.files) &&
+        module.files.length > 1 &&
+        fileIndex > 0
+      ) {
+        newHash += `-file-${fileIndex}`;
+      }
+
+      // Update URL without triggering page reload
+      window.history.pushState(
+        { moduleId: moduleId, fileIndex: fileIndex, moduleOrder: moduleOrder },
+        '',
+        window.location.pathname + window.location.search + newHash
+      );
+    }
+
     // Handle hash navigation after content is loaded
     setTimeout(() => {
-      if (window.location.hash) {
+      if (window.location.hash && !window.location.hash.match(/^#module-\d+/)) {
+        // Only handle hash navigation if it's not a module hash (it's a section hash)
         handleHashNavigation();
       } else {
-        // Scroll to top if no hash
+        // Scroll to top if no section hash
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     }, 100);

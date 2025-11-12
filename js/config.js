@@ -47,6 +47,18 @@ const modules = [
     path: './Module 05: Docker/README.md',
     category: 'Build & Deploy',
     order: 5,
+    files: [
+      {
+        name: 'Docker Basics',
+        path: './Module 05: Docker/README.md',
+        icon: '🐳',
+      },
+      {
+        name: 'Docker Compose',
+        path: './Module 05: Docker/docker-compose.md',
+        icon: '📦',
+      },
+    ],
   },
   {
     id: 'module-06',
