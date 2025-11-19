@@ -124,7 +124,7 @@ We've created a beautiful, interactive documentation website for easy navigation
 
 ### **View Online** (GitHub Pages)
 
-Once deployed, visit: `https://yourusername.github.io/Mastering-DevOps-From-Basics-to-Enterprise/`
+Once deployed, visit: `https://govindsingh9447.github.io/Mastering-DevOps-From-Basics-to-Enterprise/`
 
 ### **Run Locally**
 
